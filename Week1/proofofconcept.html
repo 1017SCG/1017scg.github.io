@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Index laws practice</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#172b42;font:17px/1.55 system-ui,sans-serif}main{max-width:760px;margin:32px auto;padding:28px;background:white;border:1px solid #dce4ed;border-radius:18px}h1{margin:0;font-size:30px}p{margin:10px 0 20px}.eyebrow{color:#326957;font-size:13px;font-weight:750;letter-spacing:.12em}fieldset{border:1px solid #dce4ed;border-radius:10px;margin:24px 0;padding:16px}.settings{display:flex;gap:14px;flex-wrap:wrap}label{display:block;font-size:14px;font-weight:650}select,input,button{font:inherit}select,input{border:1px solid #9baabd;border-radius:7px;padding:10px;background:white;color:inherit}select{max-width:100%}input[type=number]{width:82px}input[type=checkbox]{width:auto}.check{margin-top:14px}#question{font:36px/1.6 Georgia,serif;margin:20px 0}#answer{width:100%;font-size:22px;margin:6px 0}button{border:0;border-radius:8px;padding:12px 18px;cursor:pointer;font-weight:650;background:#155f51;color:white}button.secondary{background:#e9eef5;color:#172b42}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}button:hover{filter:brightness(.94)}:focus-visible{outline:3px solid #d38a00;outline-offset:3px}#feedback{padding:16px;border-radius:8px;background:#f0f4f8;min-height:84px}#feedback.good{background:#e4f4ea;color:#195135}#feedback.bad{background:#fff0e8;color:#843b14}.hint,footer{font-size:14px;color:#53677c}footer{margin-top:24px}sup{font-size:.62em} @media(max-width:600px){main{margin:0;border:0;border-radius:0;padding:22px}#question{font-size:30px}}
+</style>
+<main>
+<div class="eyebrow">MATHS PRACTICE · PROOF OF CONCEPT</div>
+<h1>Index laws</h1>
+<p>Simplify the expression. Enter your complete algebraic answer.</p>
+<fieldset><legend>Question settings</legend><div class="settings">
+<label>Question type<br><select id="mode"><option value="mixed">Multiplication & division</option><option value="multiply">Multiplication</option><option value="divide">Division</option></select></label>
+<label>Minimum exponent<br><input id="min" type="number" min="1" max="20" value="1"></label>
+<label>Maximum exponent<br><input id="max" type="number" min="1" max="20" value="10"></label>
+</div><label class="check"><input id="negative" type="checkbox"> Allow negative exponents in answers</label></fieldset>
+<div id="counter" class="hint"></div><div id="question" aria-label="Question"></div>
+<form id="form"><label for="answer">Your answer</label><input id="answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="For example: x^7 or 1/x^3" aria-describedby="syntax">
+<div id="syntax" class="hint">Use ^ for powers, * for multiplication, and / for division. Assume x ≠ 0.</div>
+<div class="actions"><button type="submit">Check Answer</button><button type="button" class="secondary" id="next">New Question</button></div></form>
+<div id="feedback" role="status" aria-live="polite">Enter an answer, then select Check Answer.</div>
+<footer>Unlimited practice. Questions may repeat. Results are not saved or sent to Canvas.</footer>
+</main>
+<script>
+'use strict';
+// A deliberately small algebra parser: expressions in x, arithmetic and integer powers.
+// It compares monomials algebraically; it never executes student input as JavaScript.
+function parseExpression(source){
+  let s=source.replace(/\s/g,'').replace(/[×·]/g,'*').replace(/÷/g,'/').replace(/[−–]/g,'-').replace(/²/g,'^2').replace(/³/g,'^3');
+  if(!s || s.length>180)throw Error('Enter an expression of at most 180 characters.');
+  let tokens=s.match(/(?:\d+(?:\.\d*)?|\.\d+)|[x()+*/^\-]/g)||[];
+  if(tokens.join('')!==s)throw Error('Use x, numbers, parentheses, +, -, *, / and ^.');
+  let i=0;
+  const value=(c,p=0)=>{if(!Number.isFinite(c)||!Number.isFinite(p)||Math.abs(p)>100||Math.abs(c)>1e100)throw Error('This expression is outside the supported range.');return {c,p:c===0?0:p};};
+  function atom(){let t=tokens[i++];if(t==='('){let a=sum();if(tokens[i++]!==')')throw Error('Check your parentheses.');return a;}if(t==='x')return value(1,1);if(t && /^(?:\d|\.)/.test(t))return value(Number(t));throw Error('Check the expression syntax.');}
+  function power(){let a=atom();if(tokens[i]==='^'){i++;let b=unary();if(b.p!==0||!Number.isInteger(b.c)||Math.abs(b.c)>100)throw Error('Use integer numerical exponents between -100 and 100.');if(a.c===0&&b.c<=0)throw Error('That power is undefined.');a=value(a.c**b.c,a.p*b.c);}return a;}
+  function unary(){if(tokens[i]==='+'){i++;return unary();}if(tokens[i]==='-'){i++;let a=unary();return value(-a.c,a.p);}return power();}
+  function product(){let a=unary();while(i<tokens.length){let op=tokens[i];let implicit=op==='x'||op==='('||(op && /^(?:\d|\.)/.test(op));if(op!=='*'&&op!=='/'&&!implicit)break;if(!implicit)i++;let b=unary();if(op==='/'){if(b.c===0)throw Error('Division by zero is undefined.');a=value(a.c/b.c,a.p-b.p);}else a=value(a.c*b.c,a.p+b.p);}return a;}
+  function sum(){let a=product();while(tokens[i]==='+'||tokens[i]==='-'){let op=tokens[i++],b=product();if(a.c!==0&&b.c!==0&&a.p!==b.p)throw Error('For this activity, enter a single power of x or an equivalent product or fraction.');a=value(a.c+(op==='+'?b.c:-b.c),a.c===0?b.p:a.p);}return a;}
+  let result=sum();if(i!==tokens.length)throw Error('Check the expression syntax.');return result;
+}
+const $=id=>document.getElementById(id);
+let current,number=0;
+function feedback(text,kind=''){$('feedback').textContent=text;$('feedback').className=kind;}
+function canonical(n){return n===0?'1':n===1?'x':'x^'+n;}
+function newQuestion(){
+  let lo=Number($('min').value),hi=Number($('max').value);
+  if(!Number.isInteger(lo)||!Number.isInteger(hi)||lo<1||hi>20||lo>hi){feedback('Choose whole-number exponents with 1 ≤ minimum ≤ maximum ≤ 20.','bad');return;}
+  const random=()=>lo+Math.floor(Math.random()*(hi-lo+1));
+  let a=random(),b=random(),divide=$('mode').value==='divide'||($('mode').value==='mixed'&&Math.random()<.5);
+  if(divide&&!$('negative').checked&&a<b)[a,b]=[b,a];
+  current={a,b,divide,n:divide?a-b:a+b};number++;
+  $('counter').textContent='Question '+number;
+  $('question').innerHTML='x<sup>'+a+'</sup> '+(divide?'÷':'×')+' x<sup>'+b+'</sup>';
+  $('question').setAttribute('aria-label','Simplify x to the power '+a+(divide?' divided by ':' multiplied by ')+'x to the power '+b);
+  $('answer').value='';feedback('Enter an answer, then select Check Answer.');
+}
+function checkAnswer(event){
+  event.preventDefault();if(!current)return;
+  try{let result=parseExpression($('answer').value);let correct=Math.abs(result.c-1)<1e-12&&result.p===current.n;
+    let rule=current.divide?'subtract':'add';let work=current.a+(current.divide?' − ':' + ')+current.b+' = '+current.n;
+    if(correct){let simple=$('answer').value.replace(/\s/g,'').replace(/[−–]/g,'-');let forms=[canonical(current.n)];if(current.n<0)forms.push('1/'+(current.n===-1?'x':'x^'+(-current.n)));if(current.n===2)forms.push('x²');if(current.n===3)forms.push('x³');feedback(forms.includes(simple)?'Correct! '+work+'. For the same base, '+rule+' the exponents.':'Your expression is equivalent! A simplified answer is '+canonical(current.n)+'. '+work+'.','good');}
+    else feedback('Not quite. For the same base, '+rule+' the exponents. Try again.','bad');
+  }catch(error){feedback(error.message,'bad');}
+}
+$('form').addEventListener('submit',checkAnswer);
+$('next').addEventListener('click',()=>{newQuestion();$('answer').focus();});
+for(const id of ['mode','min','max','negative'])$(id).addEventListener('change',newQuestion);
+newQuestion();
+</script>
+</html>

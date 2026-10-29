@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Index laws practice</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#25312f;font:16px/1.5 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:12px 24px 32px}.instructions{font-size:14px;color:#58645f;margin:12px 0 4px}section{padding:24px 0;border-bottom:1px solid #e4e8e5}section:last-child{border:0}.prompt{font-size:14px;margin:0 0 8px;color:#58645f}.math{font-size:23px;min-height:54px;overflow-x:auto;padding:8px 0 12px}.fallback{font-family:Georgia,serif;font-style:italic}form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}input,button{font:inherit;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}input{width:220px;min-width:0;max-width:100%;background:#fff}button{cursor:pointer;background:#f5f7f5;color:#263a30}button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}button:hover{filter:brightness(.95)}:focus-visible{outline:3px solid #b87f20;outline-offset:2px}.feedback{font-size:14px;margin-top:10px;min-height:22px}.good{color:#20623e}.bad{color:#a23e26}.feedback .katex{font-size:1.1em}#render-status{color:#a23e26;font-size:14px} @media(max-width:480px){main{padding:8px 16px}input{width:100%}button{font-size:14px}.math{font-size:21px}}
+.divide .math{font-size:30px}.close{color:#875c0b}
+</style>
+</head>
+<body><main aria-label="Index laws practice">
+<p class="instructions">Enter your answer using ^ for powers (e.g. x^7) and / for fractions (e.g. 1/25).</p>
+<p id="render-status" role="status" hidden></p>
+<div id="questions"></div>
+</main><script>
+window.addEventListener("DOMContentLoaded", () => {
+'use strict';
+function parseExpression(source){
+  let s=source.replace(/\s/g,'').replace(/[×·]/g,'*').replace(/÷/g,'/').replace(/[−–]/g,'-').replace(/²/g,'^2').replace(/³/g,'^3');
+  if(!s || s.length>180)throw Error('Enter an expression of at most 180 characters.');
+  let tokens=s.match(/(?:\d+(?:\.\d*)?|\.\d+)|[x()+*/^\-]/g)||[];
+  if(tokens.join('')!==s)throw Error('Use x, numbers, parentheses, +, -, *, / and ^.');
+  let i=0;
+  const value=(c,p=0)=>{if(!Number.isFinite(c)||!Number.isFinite(p)||Math.abs(p)>100||Math.abs(c)>1e100)throw Error('This expression is outside the supported range.');return {c,p:c===0?0:p};};
+  function atom(){let t=tokens[i++];if(t==='('){let a=sum();if(tokens[i++]!==')')throw Error('Check your parentheses.');return a;}if(t==='x')return value(1,1);if(t && /^(?:\d|\.)/.test(t))return value(Number(t));throw Error('Check the expression syntax.');}
+  function power(){let a=atom();if(tokens[i]==='^'){i++;let b=unary();if(b.p!==0||!Number.isInteger(b.c)||Math.abs(b.c)>100)throw Error('Use integer numerical exponents between -100 and 100.');if(a.c===0&&b.c<=0)throw Error('That power is undefined.');a=value(a.c**b.c,a.p*b.c);}return a;}
+  function unary(){if(tokens[i]==='+'){i++;return unary();}if(tokens[i]==='-'){i++;let a=unary();return value(-a.c,a.p);}return power();}
+  function product(){let a=unary();while(i<tokens.length){let op=tokens[i];let implicit=op==='x'||op==='('||(op && /^(?:\d|\.)/.test(op));if(op!=='*'&&op!=='/'&&!implicit)break;if(!implicit)i++;let b=unary();if(op==='/'){if(b.c===0)throw Error('Division by zero is undefined.');a=value(a.c/b.c,a.p-b.p);}else a=value(a.c*b.c,a.p+b.p);}return a;}
+  function sum(){let a=product();while(tokens[i]==='+'||tokens[i]==='-'){let op=tokens[i++],b=product();if(a.c!==0&&b.c!==0&&a.p!==b.p)throw Error('For this activity, enter a single power of x or an equivalent product or fraction.');a=value(a.c+(op==='+'?b.c:-b.c),a.c===0?b.p:a.p);}return a;}
+  let result=sum();if(i!==tokens.length)throw Error('Check the expression syntax.');return result;
+}
+
+'use strict';
+const randomInt=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+const powerText=n=>n===0?'1':n===1?'x':`x^${n}`;
+const powerLatex=n=>n===0?'1':n===1?'x':`x^{${n}}`;
+function generateQuestion(type){
+  let a=randomInt(2,9), b=randomInt(2,5);
+  switch(type){
+    case 'multiply':return {latex:`x^{${a}} \\times x^{${b}}`,c:1,p:a+b,answer:powerText(a+b),solution:powerLatex(a+b),hint:'Add the exponents when multiplying powers of the same base.'};
+    case 'divide':a=randomInt(3,12);b=randomInt(1,a-1);return {latex:`\\frac{x^{${a}}}{x^{${b}}}`,c:1,p:a-b,requireSimplified:true,answer:powerText(a-b),solution:powerLatex(a-b),hint:'Subtract the denominator’s exponent from the numerator’s exponent.'};
+    case 'power':return {latex:`\\left(x^{${a}}\\right)^{${b}}`,c:1,p:a*b,answer:powerText(a*b),solution:powerLatex(a*b),hint:'Multiply the exponents when raising a power to another power.'};
+    case 'zero':return {latex:'x^{0}',c:1,p:0,answer:'1',solution:'1',hint:'Any nonzero number raised to the power zero equals 1.'};
+    case 'negative':{let base=randomInt(2,9),exponent=randomInt(1,3),denominator=base**exponent;return {latex:`${base}^{-${exponent}}`,c:1/denominator,p:0,answer:`1/${denominator}`,solution:`\\frac{1}{${denominator}}`,fraction:true,hint:'Use the reciprocal, then evaluate the positive power in the denominator.'};}
+    case 'root':return {latex:`\\sqrt{x^{${2*a}}}`,c:1,p:a,answer:powerText(a),solution:powerLatex(a),hint:'For positive x, halve the exponent when taking a square root.'};
+    case 'fractional':{let degree=randomInt(2,3),root=randomInt(2,degree===2?10:5);return {latex:`${root**degree}^{\\frac{1}{${degree}}}`,c:root,p:0,answer:String(root),solution:String(root),hint:`A power of 1/${degree} means take the ${degree===2?'square':'cube'} root.`};}
+    default:throw Error('Unknown question type');
+  }
+}
+function assessAnswer(question,text){
+  const result=parseExpression(text);
+  if(Math.abs(result.c-question.c)>1e-12||result.p!==question.p)return {kind:'bad',text:'Not quite. '+question.hint};
+  const compact=text.replace(/\s/g,'').replace(/[−–]/g,'-');
+  if(question.requireSimplified){
+    const forms=question.p===1?['x']:[question.answer,`x^(${question.p})`];
+    if(question.p===2)forms.push('x²');
+    if(question.p===3)forms.push('x³');
+    if(!forms.includes(compact))return {kind:'close',text:'You’re close! Your expression is equivalent to the correct answer, but it still needs to be simplified further. Try again.'};
+    return {kind:'good',text:'Correct!'};
+  }
+  if(compact!==question.answer)return {kind:'good',text:question.fraction?'Equivalent value. Write it as a fraction with the denominator evaluated: ':'Equivalent expression. A simplified answer is ',solution:true};
+  return {kind:'good',text:'Correct!'};
+}
+function renderMath(element,latex){
+  if(window.katex){window.katex.render(latex,element,{throwOnError:false,output:'htmlAndMathml'});}
+  else{element.textContent=latex;element.classList.add('fallback');}
+}
+const rows=[
+  ['multiply','Simplify.',''],
+  ['divide','Simplify.','Assume x ≠ 0.'],
+  ['power','Simplify.',''],
+  ['zero','Evaluate.','Assume x ≠ 0.'],
+  ['negative','Write as a fraction.',''],
+  ['root','Simplify.','Assume x > 0.'],
+  ['fractional','Evaluate.','']
+];
+if(!window.katex){const status=document.getElementById('render-status');status.hidden=false;status.textContent='Maths formatting could not load. Connect to the internet and reload the page.';}
+for(const [index,[type,instruction,assumption]] of rows.entries()){
+  const section=document.createElement('section');
+  section.setAttribute('aria-label',`Question ${index+1}`);
+  section.className=type;
+  section.innerHTML=`<p class="prompt">${instruction} ${assumption}</p><div class="math"></div><form><input aria-label="Answer to question ${index+1}" aria-describedby="feedback-${index}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Your answer"><button type="submit">Check Answer</button><button type="button">New Question</button></form><div class="feedback" id="feedback-${index}" role="status" aria-live="polite"></div>`;
+  document.getElementById('questions').appendChild(section);
+  const input=section.querySelector('input'),feedback=section.querySelector('.feedback');
+  let question;
+  function next(){question=generateQuestion(type);renderMath(section.querySelector('.math'),question.latex);input.value='';feedback.textContent='';feedback.className='feedback';}
+  section.querySelector('form').addEventListener('submit',event=>{
+    event.preventDefault();
+    try{const verdict=assessAnswer(question,input.value);feedback.className='feedback '+verdict.kind;feedback.textContent=verdict.text;if(verdict.solution){let math=document.createElement('span');feedback.appendChild(math);renderMath(math,question.solution);}}
+    catch(error){feedback.className='feedback bad';feedback.textContent=error.message;}
+  });
+  section.querySelector('button[type=button]').addEventListener('click',()=>{next();input.focus();});
+  next();
+}
+
+});
+</script></body></html>

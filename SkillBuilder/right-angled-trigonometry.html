@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Right-Angled Trigonometry | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:28px 24px}.prompt{margin:0 0 16px;color:#58645f;font-size:15px}.math{font-size:30px;overflow-x:auto;padding:12px 0 24px;min-height:80px}math{font-size:1em}form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}input,button{font:inherit;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}input{width:270px;max-width:100%;min-width:0}button{cursor:pointer;background:#f5f7f5;color:#263a30}button[type=submit]{background:#285b45;color:white;border-color:#285b45}button:hover{filter:brightness(.95)}:focus-visible{outline:3px solid #b87f20;outline-offset:2px}.hint{font-size:13px;color:#58645f;margin-top:12px}.feedback{font-size:15px;margin-top:18px;min-height:48px}.good{color:#20623e}.bad{color:#a23e26}.close{color:#875c0b}@media(max-width:480px){main{padding:22px 16px}input{width:100%}button{font-size:14px}.math{font-size:26px}}
+.answer-row{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:18px;align-items:center;width:100%}.preview{min-height:48px;overflow-x:auto;padding:8px 0;font-size:23px}.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}.preview-label{font:12px/1.5 system-ui,sans-serif;color:#68736d;display:block}.answer-row input{width:100%}@media(max-width:480px){.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.preview{font-size:19px}}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}.solution[hidden]{display:none}.solution-answer{font-size:24px;overflow-x:auto;margin-bottom:10px}.solution p{margin:0;font-size:15px}
+.step{margin:18px 0}.step p{margin:0 0 6px;font-size:14px}.step-maths{font-size:23px;overflow-x:auto;overflow-y:hidden;padding:12px 0;line-height:normal}.step-maths .katex{display:inline-block;vertical-align:middle}.rule{font-size:14px;margin-bottom:16px!important}.final-label{display:block;margin-top:20px}#answer{width:200px}
+h1{font-size:24px;font-weight:650;margin:0 0 20px}.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+
+/* Shared Skill Builder presentation, kept inline so each activity remains standalone. */
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+h2{font-size:19px;font-weight:650;margin:0 0 12px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{width:270px;max-width:100%;padding:9px 12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+.rule-heading,.final-heading,.step-heading,.final-label{display:block;font-size:15px;font-weight:700;margin:16px 0 8px}
+.rule-heading:first-child,.step-heading:first-child{margin-top:0}
+.solution-answer,.step-maths{padding:10px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.solution-answer .katex,.step-maths .katex,.preview .katex{display:inline-block;vertical-align:middle}
+.preview{min-height:56px;padding:12px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}
+.preview-label{display:block;font-size:12px;color:#68736d}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}.preview{font-size:19px}.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.answer-row input{width:100%}}
+.diagram{margin:4px 0 22px}.diagram svg{display:block;width:100%;max-width:540px;height:auto;margin:auto}.diagram text{font:20px system-ui,sans-serif;fill:#25312f;paint-order:stroke;stroke:white;stroke-width:6px;stroke-linejoin:round}.diagram text.unknown{font:italic 25px Georgia,serif;fill:#285b45}.diagram .edge{stroke:#25312f;stroke-width:2.5;fill:none}.diagram .right-angle{stroke:#58645f;stroke-width:1.8;fill:none}#answer{width:270px}.working-step{margin:16px 0}.working-step p{font-size:15px;margin:6px 0}.diagram-caption{text-align:center;font-size:13px;color:#68736d;margin:0}
+.diagram .angle-arc{stroke:#285b45;stroke-width:1.7;fill:none}.diagram .angle-label{font-size:19px;fill:#285b45}.diagram .angle-label.unknown{font:italic 24px Georgia,serif}
+</style>
+</head>
+<body><main aria-label="Right-angled trigonometry practice">
+<a class="back-link" href="index.html">← Skill Builder</a>
+<h1>Right-Angled Trigonometry</h1>
+<p id="prompt" class="prompt"></p>
+<div id="diagram" class="diagram"></div>
+<form id="form"><input id="answer" aria-label="Your answer including units or degrees" aria-describedby="hint feedback" autocomplete="off" spellcheck="false" placeholder="Your answer"><div class="actions"><button type="submit">Check Answer</button><button type="button" id="next">New Question</button><button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button></div></form>
+<p id="hint" class="hint"></p>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="solution" class="solution" hidden></div>
+<p id="render-status" class="hint" hidden></p>
+</main><script>
+'use strict';
+const randomInt=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+const ratios={sin:['opposite','hypotenuse'],cos:['adjacent','hypotenuse'],tan:['opposite','adjacent']};
+const units={mm:1,cm:10,m:1000,km:1000000};
+const toRadians=degrees=>degrees*Math.PI/180;
+const toDegrees=radians=>radians*180/Math.PI;
+let questionBag=[],unitBag=[];
+function shuffle(values){const a=[...values];for(let i=a.length-1;i>0;i--){const j=randomInt(0,i);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function generateQuestion(forced){
+  if(!questionBag.length)questionBag=shuffle(['sin-side','cos-side','tan-side','sin-angle','cos-angle','tan-angle']);
+  if(!unitBag.length)unitBag=shuffle(Object.keys(units));
+  const category=forced||questionBag.pop(),[ratio,kind]=category.split('-'),pair=ratios[ratio],unit=unitBag.pop();
+  const sides={};let angle,unknown,known;
+  if(kind==='angle'){
+    unknown='angle';known=[...pair];
+    if(ratio==='tan'){sides.opposite=randomInt(3,20);sides.adjacent=randomInt(3,20);angle=toDegrees(Math.atan(sides.opposite/sides.adjacent));}
+    else{const h=randomInt(6,25),leg=randomInt(2,h-1);sides.hypotenuse=h;sides[pair[0]]=leg;angle=toDegrees(Math[ratio==='sin'?'asin':'acos'](leg/h));}
+  }else{
+    angle=randomInt(20,70);unknown=pair[randomInt(0,1)];known=[pair.find(side=>side!==unknown)];
+    sides[known[0]]=randomInt(3,20);const factor=Math[ratio](toRadians(angle));
+    sides[unknown]=unknown===pair[0]?sides[known[0]]*factor:sides[known[0]]/factor;
+  }
+  if(sides.opposite!==undefined&&sides.adjacent!==undefined)sides.hypotenuse=Math.hypot(sides.opposite,sides.adjacent);
+  else if(sides.opposite!==undefined)sides.adjacent=Math.sqrt(sides.hypotenuse**2-sides.opposite**2);
+  else sides.opposite=Math.sqrt(sides.hypotenuse**2-sides.adjacent**2);
+  return {category,ratio,kind,pair,unit,sides,known,angle,unknown,answer:kind==='angle'?angle:sides[unknown],mirrorX:Math.random()<0.5,mirrorY:Math.random()<0.5};
+}
+function diagramGeometry(q){
+  const ratio=q.sides.adjacent/q.sides.opposite,visualRatio=Math.max(0.8,Math.min(1.5,ratio)),height=200,width=height*visualRatio;
+  const transform=([x,y])=>[q.mirrorX?520-x:x,q.mirrorY?320-y:y];
+  return {r:transform([260-width/2,260]),p:transform([260+width/2,260]),t:transform([260-width/2,60]),adjusted:Math.abs(ratio-visualRatio)>1e-10};
+}
+function diagramMarkup(q){
+  const {r,p,t,adjusted}=diagramGeometry(q),points=[r,p,t],centroid=[points.reduce((s,v)=>s+v[0],0)/3,points.reduce((s,v)=>s+v[1],0)/3];
+  const edges=[['adjacent',r,p],['opposite',r,t],['hypotenuse',p,t]];
+  const labels=edges.map(([name,a,b])=>{
+    if(!q.known.includes(name)&&q.unknown!==name)return '';
+    const midpoint=[(a[0]+b[0])/2,(a[1]+b[1])/2],length=Math.hypot(b[0]-a[0],b[1]-a[1]);let normal=[-(b[1]-a[1])/length,(b[0]-a[0])/length];
+    if(normal[0]*(midpoint[0]-centroid[0])+normal[1]*(midpoint[1]-centroid[1])<0)normal=normal.map(n=>-n);
+    const vertical=Math.abs(b[0]-a[0])<1e-8;
+    const anchor=Math.abs(normal[0])>0.35?(normal[0]>0?'start':'end'):'middle';
+    const offset=vertical?17:28;
+    return `<text x="${(midpoint[0]+offset*normal[0]).toFixed(2)}" y="${(midpoint[1]+offset*normal[1]).toFixed(2)}" text-anchor="${anchor}" dominant-baseline="middle"${name===q.unknown?' class="unknown"':''}>${name===q.unknown?'x':q.sides[name]+' '+q.unit}</text>`;
+  }).join('');
+  const vector=(a,b)=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return [(b[0]-a[0])/length,(b[1]-a[1])/length];};
+  const u=vector(r,p),v=vector(r,t),size=15,corner=[[r[0]+size*u[0],r[1]+size*u[1]],[r[0]+size*(u[0]+v[0]),r[1]+size*(u[1]+v[1])],[r[0]+size*v[0],r[1]+size*v[1]]];
+  const from=vector(p,r),to=vector(p,t),radius=34,start=[p[0]+radius*from[0],p[1]+radius*from[1]],end=[p[0]+radius*to[0],p[1]+radius*to[1]],sweep=from[0]*to[1]-from[1]*to[0]>0?1:0;
+  const bisector=[from[0]+to[0],from[1]+to[1]],norm=Math.hypot(...bisector),angleLabel=[p[0]+65*bisector[0]/norm,p[1]+65*bisector[1]/norm];
+  const description='Right-angled triangle. '+q.known.map(side=>side+' side '+q.sides[side]+' '+q.unit).join('. ')+'. '+(q.kind==='angle'?'Find angle theta.':'Angle '+q.angle+' degrees. Find the '+q.unknown+' side x.')+(adjusted?' Diagram not to scale.':'');
+  return `<svg viewBox="0 0 520 320" role="img" aria-labelledby="triangle-title triangle-description"><title id="triangle-title">Right-angled triangle</title><desc id="triangle-description">${description}</desc><path class="edge" d="M ${r.join(' ')} L ${p.join(' ')} L ${t.join(' ')} Z"/><polyline class="right-angle" points="${corner.map(v=>v.join(',')).join(' ')}"/><path class="angle-arc" d="M ${start.join(' ')} A ${radius} ${radius} 0 0 ${sweep} ${end.join(' ')}"/><text class="angle-label${q.kind==='angle'?' unknown':''}" x="${angleLabel[0]}" y="${angleLabel[1]}" text-anchor="middle" dominant-baseline="middle">${q.kind==='angle'?'θ':q.angle+'°'}</text>${labels}</svg>${adjusted?'<p class="diagram-caption">Diagram not to scale</p>':''}`;
+}
+function assessAnswer(q,text){
+  const s=text.trim().toLowerCase();
+  if(!s||s.length>100)return {kind:'input',text:'Check your input. Enter a number with '+(q.kind==='angle'?'degrees, for example 20 degrees.' :'length units, for example 5.25 cm.')};
+  const match=s.match(/^(\d+(?:\.\d+)?)\s*(°|deg(?:ree)?s?|mm|cm|km|m)?$/);
+  if(!match)return {kind:'input',text:'Check your input. Enter a number followed by '+(q.kind==='angle'?'degrees, for example 20 degrees.':'mm, cm, m or km.')};
+  const number=Number(match[1]),unit=match[2],degree=unit&&(unit==='°'||unit.startsWith('deg'));
+  if(q.kind==='angle'&&unit&&!degree)return {kind:'input',text:'Check your input. The unknown is an angle. Include degrees with your answer, for example 20 degrees.'};
+  if(q.kind==='side'&&degree)return {kind:'input',text:'Check your input. The unknown is a side length. Use mm, cm, m or km.'};
+  const value=q.kind==='side'&&unit?number*units[unit]/units[q.unit]:number;
+  const correct=Number.isFinite(value)&&Math.abs(value-Number(q.answer.toFixed(2)))<=0.01+1e-10;
+  if(correct&&!unit)return {kind:'close',text:q.kind==='angle'?'You’re close! The number is correct. Include degrees in your final answer, for example 20 degrees.':'You’re close! The number is correct. Include the length units in your final answer.'};
+  if(correct)return {kind:'good',text:'Correct!'};
+  if(q.kind==='angle'){
+    if(number<=0||number>=90)return {kind:'bad',text:'Not quite. The unknown angle must be between 0° and 90°.'};
+    return {kind:'bad',text:'Not quite. Identify the two known sides relative to θ, choose sin, cos or tan, then use the inverse function to find the angle. Check that your calculator is in degree mode.'};
+  }
+  if(unit&&unit!==q.unit&&Math.abs(number-Number(q.answer.toFixed(2)))<=0.01+1e-10)return {kind:'bad',text:'Not quite. Check the units. The diagram uses '+q.unit+'.'};
+  if(q.unknown==='hypotenuse'&&value<=Math.max(...q.known.map(side=>q.sides[side])))return {kind:'bad',text:'Not quite. The hypotenuse must be the longest side of the right-angled triangle.'};
+  if(q.known.includes('hypotenuse')&&value>=q.sides.hypotenuse)return {kind:'bad',text:'Not quite. The unknown shorter side must be shorter than the hypotenuse.'};
+  return {kind:'bad',text:'Not quite. Identify the known and unknown sides relative to the marked angle, then check your ratio and rearrangement. Use degree mode and round only the final answer.'};
+}
+function solutionSteps(q){
+  const [top,bottom]=q.pair,fn='\\'+q.ratio,theta=q.kind==='angle'?'\\theta':q.angle+'^{\\circ}',symbolic=`${fn}\\theta=\\frac{\\text{${top}}}{\\text{${bottom}}}`;
+  const description=q.kind==='angle'?`Relative to θ, the known sides are ${top} and ${bottom}.`:`Relative to the ${q.angle}° angle, the known side is ${q.known[0]} and the unknown side is ${q.unknown}.`;
+  const steps=[['Choose the ratio',description,symbolic]];
+  if(q.kind==='angle'){
+    const a=q.sides[top],b=q.sides[bottom];
+    steps.push(['Substitute the lengths','',`${fn}\\theta=\\frac{${a}}{${b}}`]);
+    steps.push(['Use the inverse function','Use degree mode on your calculator.',`\\theta=${fn}^{-1}\\left(\\frac{${a}}{${b}}\\right)`]);
+    steps.push(['Calculate and round','Round only the final answer to two decimal places.',`\\theta\\approx ${q.answer.toFixed(2)}^{\\circ}`]);
+  }else{
+    const known=q.sides[q.known[0]],unknownOnTop=q.unknown===top,ratioValue=`${fn}\\left(${theta}\\right)`;
+    steps.push(['Substitute the known information','',`${ratioValue}=\\frac{${unknownOnTop?'x':known}}{${unknownOnTop?known:'x'}}`]);
+    if(unknownOnTop)steps.push(['Rearrange','Multiply by the known side length.',`x=${known}\\times ${ratioValue}`]);
+    else{
+      steps.push(['Rearrange','Multiply both sides by x.',`x\\times ${ratioValue}=${known}`]);
+      steps.push(['Make x the subject','Divide by the trigonometric ratio.',`x=\\frac{${known}}{${ratioValue}}`]);
+    }
+    steps.push(['Calculate and round','Use degree mode. Round only the final answer to two decimal places.',`x\\approx ${q.answer.toFixed(2)}`]);
+  }
+  return steps;
+}
+const $=id=>document.getElementById(id);
+function renderMath(target,latex){if(window.katex)window.katex.render(latex,target,{throwOnError:false,output:'htmlAndMathml'});else target.textContent=latex;}
+let current;
+function newQuestion(){
+  current=generateQuestion();$('diagram').innerHTML=diagramMarkup(current);
+  $('prompt').textContent=current.kind==='angle'?'Find θ. Round to two decimal places and give your answer in degrees.':'Find x. Round to two decimal places and include units in your answer.';
+  $('hint').textContent=current.kind==='angle'?'Use degree mode. Include degrees with your answer, for example 20 degrees.':'Use degree mode. Include mm, cm, m or km.';
+  $('answer').placeholder=current.kind==='angle'?'For example: 20 degrees':'For example: 5.25 cm';
+  $('answer').value='';$('feedback').textContent='';$('feedback').className='feedback';$('solution').hidden=true;$('solution').textContent='';$('show-solution').setAttribute('aria-expanded','false');
+}
+function showSolution(){
+  const target=$('solution');target.textContent='';
+  for(const [heading,explanation,latex] of solutionSteps(current)){
+    const row=document.createElement('div');row.className='working-step';const title=document.createElement('strong');title.textContent=heading;row.appendChild(title);
+    if(explanation){const p=document.createElement('p');p.textContent=explanation;row.appendChild(p);}
+    const maths=document.createElement('div');maths.className='solution-answer';renderMath(maths,latex);row.appendChild(maths);target.appendChild(row);
+  }
+  const label=document.createElement('strong');label.className='final-label';label.textContent='Final answer:\u00a0\u00a0\u00a0';target.appendChild(label);
+  const result=document.createElement('div');result.className='solution-answer';renderMath(result,current.kind==='angle'?`\\theta\\approx ${current.answer.toFixed(2)}^{\\circ}`:`x\\approx ${current.answer.toFixed(2)}\\,\\mathrm{${current.unit}}`);target.appendChild(result);
+  target.hidden=false;$('show-solution').setAttribute('aria-expanded','true');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!window.katex){$('render-status').hidden=false;$('render-status').textContent='Connect to the internet and reload for maths formatting.';}
+  $('form').addEventListener('submit',event=>{event.preventDefault();const verdict=assessAnswer(current,$('answer').value);$('feedback').textContent=verdict.text;$('feedback').className='feedback '+verdict.kind;});
+  $('next').addEventListener('click',()=>{newQuestion();$('answer').focus();});$('show-solution').addEventListener('click',showSolution);newQuestion();
+});
+
+</script></body></html>

@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Index Laws - Multiple Variables | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#25312f;font:16px/1.5 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:12px 24px 32px}.instructions{font-size:14px;color:#58645f;margin:12px 0 4px}section{padding:24px 0;border-bottom:1px solid #e4e8e5}section:last-child{border:0}.prompt{font-size:14px;margin:0 0 8px;color:#58645f}.math{font-size:23px;min-height:54px;overflow-x:auto;padding:8px 0 12px}.fallback{font-family:Georgia,serif;font-style:italic}form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}input,button{font:inherit;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}input{width:220px;min-width:0;max-width:100%;background:#fff}button{cursor:pointer;background:#f5f7f5;color:#263a30}button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}button:hover{filter:brightness(.95)}:focus-visible{outline:3px solid #b87f20;outline-offset:2px}.feedback{font-size:14px;margin-top:10px;min-height:22px}.good{color:#20623e}.bad{color:#a23e26}.feedback .katex{font-size:1.1em}#render-status{color:#a23e26;font-size:14px} @media(max-width:480px){main{padding:8px 16px}input{width:100%}button{font-size:14px}.math{font-size:21px}}
+.divide .math{font-size:30px}.close{color:#875c0b}
+.answer-row{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:18px;align-items:center;width:100%}.answer-row input{width:100%}.preview{font-size:23px;min-height:48px;overflow-x:auto;padding:8px 0}.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}.preview-label{display:block;font-size:12px;color:#68736d}.solution{margin-top:16px;padding:16px;background:#f5f7f5;border-radius:5px}.solution[hidden]{display:none}.solution-answer{font-size:23px;overflow-x:auto}.working{font-size:15px;margin:10px 0 0}@media(max-width:480px){.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.preview{font-size:19px}}
+.solution-answer{min-height:0;padding:8px 0 10px;line-height:normal;overflow-x:auto;overflow-y:hidden}.solution-answer .katex{display:inline-block;vertical-align:middle}.solution .working{margin-top:6px}
+.working{white-space:pre-line}
+.preview{min-height:56px;padding:12px 0;line-height:normal;overflow-y:hidden}.preview .katex{display:inline-block;vertical-align:middle}
+h2{font-size:19px;font-weight:650;margin:0 0 12px}.step-heading{display:block;margin:18px 0 8px}.step-heading:first-child{margin-top:0}
+
+/* Shared Skill Builder presentation, kept inline so each activity remains standalone. */
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+h2{font-size:19px;font-weight:650;margin:0 0 12px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{width:270px;max-width:100%;padding:9px 12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+.rule-heading,.final-heading,.step-heading,.final-label{display:block;font-size:15px;font-weight:700;margin:16px 0 8px}
+.rule-heading:first-child,.step-heading:first-child{margin-top:0}
+.solution-answer,.step-maths{padding:10px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.solution-answer .katex,.step-maths .katex,.preview .katex{display:inline-block;vertical-align:middle}
+.preview{min-height:56px;padding:12px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}
+.preview-label{display:block;font-size:12px;color:#68736d}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}.preview{font-size:19px}.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.answer-row input{width:100%}}
+</style>
+</head>
+<body><main aria-label="Multiple-variable index laws practice"><a class="back-link" href="index.html">← Skill Builder</a><h1>Index Laws - Multiple Variables</h1>
+<section aria-label="Multiplication"><h2>1. Multiplying terms</h2><p class="prompt">Simplify.</p><div id="question" class="math"></div>
+<form id="form"><div class="answer-row"><input id="answer" aria-label="Your answer" aria-describedby="hint feedback" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="For example: 6x^2y^3z"><div><span class="preview-label">Preview</span><div id="preview" class="preview empty" aria-live="polite">Your formatted answer</div></div></div><div class="actions"><button type="submit">Check Answer</button><button type="button" id="next">New Question</button><button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button></div></form>
+<p id="hint" class="instructions">Use ^ for powers (e.g. 6x^2y^3z)</p>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="solution" class="solution" hidden><div id="solution-answer" class="solution-answer"></div><div id="working" class="working"></div></div>
+<p id="render-status" hidden></p>
+</section><section class="divide" aria-label="Division"><h2>2. Simplifying fractions</h2><p class="prompt">Simplify. Assume x, y and z are nonzero.</p><p class="instructions"><strong>Your denominator must be in brackets. Answer using only positive powers.</strong></p><div id="division-question" class="math"></div>
+<form id="division-form"><div class="answer-row"><input id="division-answer" aria-label="Your answer" aria-describedby="division-hint division-feedback" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="For example: 2x/(3y^2)"><div><span class="preview-label">Preview</span><div id="division-preview" class="preview empty" aria-live="polite">Your formatted answer</div></div></div><div class="actions"><button type="submit">Check Answer</button><button type="button" id="division-next">New Question</button><button type="button" id="division-show-solution" aria-controls="division-solution" aria-expanded="false">Show Solution</button></div></form>
+<p id="division-hint" class="instructions">Use ^ for powers and / for fractions (e.g. 3x^2/(4yz))</p>
+<div id="division-feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="division-solution" class="solution" hidden><div id="division-solution-answer" class="solution-answer"></div><div id="division-working" class="working"></div></div>
+<p id="division-render-status" hidden></p>
+</section><section class="divide" aria-label="Multiplication of fractions"><h2>3. Multiplying fractions</h2><p class="prompt">Simplify. Assume x, y and z are nonzero.</p><p class="instructions"><strong>Your denominator must be in brackets. Answer using only positive powers.</strong></p><div id="fraction-multiply-question" class="math"></div>
+<form id="fraction-multiply-form"><div class="answer-row"><input id="fraction-multiply-answer" aria-label="Your answer" aria-describedby="fraction-multiply-hint fraction-multiply-feedback" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="For example: 2x/(3y^2)"><div><span class="preview-label">Preview</span><div id="fraction-multiply-preview" class="preview empty" aria-live="polite">Your formatted answer</div></div></div><div class="actions"><button type="submit">Check Answer</button><button type="button" id="fraction-multiply-next">New Question</button><button type="button" id="fraction-multiply-show-solution" aria-controls="fraction-multiply-solution" aria-expanded="false">Show Solution</button></div></form>
+<p id="fraction-multiply-hint" class="instructions">Use ^ for powers and / for fractions (e.g. 3x^2/(4yz))</p>
+<div id="fraction-multiply-feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="fraction-multiply-solution" class="solution" hidden><div id="fraction-multiply-solution-answer" class="solution-answer"></div><div id="fraction-multiply-working" class="working"></div></div>
+<p id="fraction-multiply-render-status" hidden></p>
+</section><section class="divide" aria-label="Division of fractions"><h2>4. Dividing fractions</h2><p class="prompt">Simplify. Assume x, y and z are nonzero.</p><p class="instructions"><strong>Your denominator must be in brackets. Answer using only positive powers.</strong></p><div id="fraction-divide-question" class="math"></div>
+<form id="fraction-divide-form"><div class="answer-row"><input id="fraction-divide-answer" aria-label="Your answer" aria-describedby="fraction-divide-hint fraction-divide-feedback" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="For example: 2x/(3y^2)"><div><span class="preview-label">Preview</span><div id="fraction-divide-preview" class="preview empty" aria-live="polite">Your formatted answer</div></div></div><div class="actions"><button type="submit">Check Answer</button><button type="button" id="fraction-divide-next">New Question</button><button type="button" id="fraction-divide-show-solution" aria-controls="fraction-divide-solution" aria-expanded="false">Show Solution</button></div></form>
+<p id="fraction-divide-hint" class="instructions">Use ^ for powers and / for fractions (e.g. 3x^2/(4yz))</p>
+<div id="fraction-divide-feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="fraction-divide-solution" class="solution" hidden><div id="fraction-divide-solution-answer" class="solution-answer"></div><div id="fraction-divide-working" class="working"></div></div>
+<p id="fraction-divide-render-status" hidden></p>
+</section></main><script>
+'use strict';
+
+function displayFeedback(target,kind,text){
+  const prefixes={bad:'Not quite. ',close:'You’re close! ',input:'Check your input. '};
+  const prefix=prefixes[kind];
+  if(prefix&&!text.startsWith(prefix.trim()))text=prefix+text;
+  target.textContent=text;
+  target.className='feedback '+kind;
+}
+function checkExpressionInput(source){
+  if(!source.trim())throw Error('Enter your answer before checking it.');
+  if(source.length>180)throw Error('Keep your answer to 180 characters or fewer.');
+  const s=source.replace(/\s/g,'');
+  if(s.startsWith('/'))throw Error('The fraction is missing its numerator. Enter a number or expression before /.');
+  let depth=0;
+  for(const character of s){if(character==='(')depth++;if(character===')')depth--;if(depth<0)throw Error('There is a closing bracket without an opening bracket. Check your brackets.');}
+  if(/\/(?:\()?$/g.test(s))throw Error('The fraction is missing its denominator. Enter a number or expression after /, using brackets around a multi-term denominator.');
+  if(/\^(?:\(?[+-]?)?$/.test(s))throw Error('The power is missing its exponent. Enter an integer after ^, for example x^3.');
+  if(depth!==0)throw Error('An opening bracket is missing its closing bracket. Put the whole denominator inside matching brackets when entering a fraction.');
+  if(/\*\*|\/\/|\^\^/.test(s))throw Error('Check the repeated operation signs. Use one * for multiplication, / for a fraction, or ^ for a power.');
+}
+
+const randomInt=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+const variables=['x','y','z'];
+function colonSpacing(text){return text.replace(/:[ \t\u00a0]*/g,':\u00a0\u00a0\u00a0');}
+function monomial(coefficient,powers){
+  const terms=variables.map((v,i)=>powers[i]===0?'':powers[i]===1?v:`${v}^{${powers[i]}}`).join('');
+  return (coefficient===1&&terms?'':String(coefficient))+terms;
+}
+function gcd(a,b){while(b){[a,b]=[b,a%b];}return a;}
+function generateQuestion(type='multiply'){
+  if(type==='fraction-multiply'||type==='fraction-divide'){
+    const coefficients=Array.from({length:4},()=>randomInt(1,10));
+    if(Math.random()<0.8){const pairs=[];for(let a=1;a<=10;a++)for(let b=1;b<=10;b++)if(gcd(a,b)>1)pairs.push([a,b]);[coefficients[0],coefficients[1]]=pairs[randomInt(0,pairs.length-1)];}
+    const powers=Array.from({length:4},()=>variables.map(()=>randomInt(0,5)));
+    const divide=type==='fraction-divide',upper=divide?[0,3]:[0,2],lower=divide?[1,2]:[1,3];
+    const n1=coefficients[upper[0]]*coefficients[upper[1]],n2=coefficients[lower[0]]*coefficients[lower[1]];
+    const left=variables.map((_,i)=>powers[upper[0]][i]+powers[upper[1]][i]),right=variables.map((_,i)=>powers[lower[0]][i]+powers[lower[1]][i]);
+    const fractions=[0,2].map(j=>'\\frac{'+monomial(coefficients[j],powers[j])+'}{'+monomial(coefficients[j+1],powers[j+1])+'}');
+    const reciprocal='\\frac{'+monomial(coefficients[3],powers[3])+'}{'+monomial(coefficients[2],powers[2])+'}';
+    return {type:'divide',operation:type,coefficients,powers,upper,lower,n1,n2,left,right,c:n1/n2,p:left.map((n,i)=>n-right[i]),latex:fractions[0]+(divide?' \\div ':' \\times ')+fractions[1],reciprocalLatex:fractions[0]+' \\times '+reciprocal,combinedLatex:'\\frac{'+monomial(n1,left)+'}{'+monomial(n2,right)+'}'};
+  }
+
+  let n1=randomInt(1,type==='divide'?20:10),n2=randomInt(1,type==='divide'?20:10);
+  if(type==='divide'&&Math.random()<0.8){
+    // Draw from the finite set of pairs with a common factor (no retry loop).
+    const pairs=[];for(let a=1;a<=20;a++)for(let b=1;b<=20;b++)if(gcd(a,b)>1)pairs.push([a,b]);
+    [n1,n2]=pairs[randomInt(0,pairs.length-1)];
+  }
+  const left=variables.map(()=>randomInt(0,6)),right=variables.map(()=>randomInt(0,6));
+  return {type,n1,n2,left,right,c:type==='divide'?n1/n2:n1*n2,p:left.map((a,i)=>type==='divide'?a-right[i]:a+right[i]),latex:type==='divide'?'\\frac{'+monomial(n1,left)+'}{'+monomial(n2,right)+'}':monomial(n1,left)+' \\times '+monomial(n2,right)};
+}
+function finalAnswer(q){
+  if(q.type!=='divide')return monomial(q.c,q.p);
+  const factor=gcd(q.n1,q.n2),top=monomial(q.n1/factor,q.p.map(n=>Math.max(0,n))),bottom=monomial(q.n2/factor,q.p.map(n=>Math.max(0,-n)));
+  return bottom==='1'?top:'\\frac{'+top+'}{'+bottom+'}';
+}
+// Parse expressions as a coefficient and three exponents, while preserving typed maths for preview.
+function denominatorLatex(tex){
+  // Parentheses used solely to group a typed denominator are redundant under a fraction bar.
+  while(tex.startsWith('\\left(')&&tex.endsWith('\\right)')){
+    let depth=0,whole=true;
+    const groups=tex.match(/\\left\(|\\right\)/g)||[];
+    for(let i=0;i<groups.length;i++){
+      depth+=groups[i]==='\\left('?1:-1;
+      if(depth===0&&i<groups.length-1){whole=false;break;}
+    }
+    if(!whole)break;
+    tex=tex.slice(6,-7);
+  }
+  return tex;
+}
+function parseExpression(source){
+  checkExpressionInput(source);
+  if((source.match(/[a-zA-Z]/g)||[]).some(letter=>!variables.includes(letter)))throw Error('Use only x, y and z as variables for this question.');
+  const s=source.replace(/\s/g,'').replace(/[−–]/g,'-').replace(/²/g,'^2').replace(/³/g,'^3');
+  if(!s||s.length>180)throw Error('Enter an expression of at most 180 characters.');
+  const tokens=s.match(/(?:\d+(?:\.\d*)?|\.\d+)|[xyz()+*/^\-]/g)||[];
+  if(tokens.join('')!==s)throw Error('Use x, y, z, numbers, brackets, +, -, *, / and ^.');
+  let i=0;
+  function value(c,p=[0,0,0],tex=String(c)){
+    if(!Number.isFinite(c)||Math.abs(c)>1e100||p.some(n=>!Number.isFinite(n)||Math.abs(n)>100))throw Error('This expression is outside the supported range.');
+    return {c,p:c===0?[0,0,0]:p,tex};
+  }
+  function atom(){const t=tokens[i++];if(t==='('){const a=sum();if(tokens[i++]!==')')throw Error('Check your brackets.');return {...a,tex:'\\left('+a.tex+'\\right)'};}if(variables.includes(t)){const p=[0,0,0];p[variables.indexOf(t)]=1;return value(1,p,t);}if(t&&/^(?:\d|\.)/.test(t))return value(Number(t),[0,0,0],t);throw Error('Check the expression syntax.');}
+  function power(){let a=atom();if(tokens[i]==='^'){i++;const b=unary();if(b.p.some(n=>n!==0)||!Number.isInteger(b.c)||Math.abs(b.c)>100)throw Error('Use an integer exponent.');if(a.c===0&&b.c<=0)throw Error('That power is undefined.');a=value(a.c**b.c,a.p.map(n=>n*b.c),a.tex+'^{'+b.tex+'}');}return a;}
+  function unary(){if(tokens[i]==='+'||tokens[i]==='-'){const sign=tokens[i++],a=unary();return value(sign==='-'?-a.c:a.c,a.p,sign+a.tex);}return power();}
+  function product(){let a=unary();while(i<tokens.length){const op=tokens[i],implicit=variables.includes(op)||op==='('||(op&&/^(?:\d|\.)/.test(op));if(op!=='*'&&op!=='/'&&!implicit)break;if(!implicit)i++;const b=unary();if(op==='/'){if(b.c===0)throw Error('Division by zero is undefined.');a=value(a.c/b.c,a.p.map((n,j)=>n-b.p[j]),'\\frac{'+a.tex+'}{'+denominatorLatex(b.tex)+'}');}else a=value(a.c*b.c,a.p.map((n,j)=>n+b.p[j]),a.tex+(implicit?'':' \\times ')+b.tex);}return a;}
+  function sum(){let a=product();while(tokens[i]==='+'||tokens[i]==='-'){const op=tokens[i++],b=product();if(a.c!==0&&b.c!==0&&a.p.some((n,j)=>n!==b.p[j]))throw Error('Combine the expression into a single term.');a=value(a.c+(op==='+'?b.c:-b.c),a.c===0?b.p:a.p,a.tex+' '+op+' '+b.tex);}return a;}
+  const result=sum();if(i!==tokens.length)throw Error('Check the expression syntax.');return result;
+}
+function isSimplified(text){
+  let s=text.replace(/\s/g,'').replace(/²/g,'^2').replace(/³/g,'^3').replace(/\^\(([+-]?\d+)\)/g,'^$1');
+  function unwrap(t){while(t.startsWith('(')&&t.endsWith(')')){let depth=0,enclosed=true;for(let i=0;i<t.length-1;i++){if(t[i]==='(')depth++;if(t[i]===')')depth--;if(depth===0){enclosed=false;break;}}if(!enclosed)break;t=t.slice(1,-1);}return t;}
+  s=unwrap(s);const parts=s.split('/');if(parts.length>2)return false;
+  const seen=new Set();
+  function term(t){
+    t=unwrap(t);
+    if(!/^(?:[1-9]\d*\*?)?(?:[xyz](?:\^-?[1-9]\d*)?)(?:\*?[xyz](?:\^-?[1-9]\d*)?)*$/.test(t)&&!(/^[1-9]\d*$/.test(t)))return null;
+    if(/^1\*?(?=[xyz])/.test(t)||/\^1(?!\d)/.test(t))return null;
+    for(const v of t.match(/[xyz]/g)||[]){if(seen.has(v))return null;seen.add(v);}
+    const coefficient=Number(t.match(/^\d+/)?.[0]||1);
+    return {coefficient,text:t};
+  }
+  const top=term(parts[0]);if(!top)return false;
+  if(parts.length===1)return true;
+  const bottom=term(parts[1]);return !!bottom&&bottom.text!=='1'&&gcd(top.coefficient,bottom.coefficient)===1;
+}
+function missingDenominatorBrackets(text){
+  const s=text.replace(/\s/g,'').replace(/[−–]/g,'-');
+  // An ungrouped denominator followed by another variable is ambiguous to a learner.
+  return /\/(?:\d+(?:\.\d+)?|[xyz](?:\^(?:\d+|\(\d+\)))?)(?:\*?[xyz])/.test(s);
+}
+function incorrectFeedback(q,a){
+  const parts=[];
+  if(Math.abs(a.c-q.c)>1e-12)parts.push('the coefficient');
+  const wrong=variables.filter((_,i)=>a.p[i]!==q.p[i]);
+  if(wrong.length===1)parts.push('the power of '+wrong[0]);
+  else if(wrong.length>1)parts.push('the powers of '+wrong.slice(0,-1).join(', ')+' and '+wrong.at(-1));
+  return 'Not quite. Check '+parts.join(' and ')+', then try again.';
+}
+function assessAnswer(q,text){
+  if(q.type==='divide'&&missingDenominatorBrackets(text))return {kind:'bad',text:'Check your denominator brackets. Put the whole denominator inside brackets, for example 2x/(3y). Use the preview to check that the whole denominator is below the fraction bar.'};
+  const a=parseExpression(text);
+  if(Math.abs(a.c-q.c)>1e-12||a.p.some((p,i)=>p!==q.p[i]))return {kind:'bad',text:incorrectFeedback(q,a)};
+  if(q.type==='divide'&&/\^\(?-/.test(text.replace(/\s/g,'').replace(/[−–]/g,'-')))return {kind:'close',text:'You’re close! Answer using only positive powers. Move variables with negative powers to the other side of the fraction.'};
+  const compact=text.replace(/\s/g,'').replace(/\^\((\d+)\)/g,'^$1');
+  const extraOne=/(^|[(/ *])1\*?(?=[xyz])/.test(compact);
+  const firstPower=/\^1(?!\d)/.test(compact);
+  if(extraOne||firstPower){
+    const tips=[];
+    if(extraOne)tips.push('Leave out the coefficient 1 when it multiplies a variable.');
+    if(firstPower)tips.push('Leave out exponents of 1: write the variable on its own.');
+    return {kind:'close',text:'You’re close! The value is correct. '+tips.join(' ')};
+  }
+  if(!isSimplified(text))return {kind:'close',text:'You’re close! Your answer is equivalent to the correct answer. Check that your answer is fully simplified.'};
+  return {kind:'good',text:'Correct!'};
+}
+function mountActivity(prefix,type){
+const $=id=>document.getElementById(prefix+id);
+function renderMath(target,latex){if(window.katex)window.katex.render(latex,target,{throwOnError:false,output:'htmlAndMathml'});else target.textContent=latex;}
+let current;
+function updatePreview(){const target=$('preview');target.className='preview';if(!$('answer').value.trim()){target.textContent='Your formatted answer';target.className+=' empty';return;}try{renderMath(target,parseExpression($('answer').value).tex);}catch(error){target.textContent='Keep typing an expression, such as 6x^2y^3z.';target.className+=' empty';}}
+function newQuestion(){current=generateQuestion(type);renderMath($('question'),current.latex);$('answer').value='';updatePreview();$('feedback').textContent='';$('feedback').className='feedback';$('solution').hidden=true;$('show-solution').setAttribute('aria-expanded','false');$('solution-answer').textContent='';$('working').textContent='';}
+function renderWorking(text,target=$('working')){
+  text=colonSpacing(text);
+  target.textContent='';
+  let position=0;
+  for(const match of text.matchAll(/\b\d+\/\d+\b|\b[xyz]\b/g)){
+    target.appendChild(document.createTextNode(text.slice(position,match.index)));
+    const variable=document.createElement('span');
+    const fraction=match[0].match(/^(\d+)\/(\d+)$/);
+    renderMath(variable,fraction?'\\frac{'+fraction[1]+'}{'+fraction[2]+'}':match[0]);
+    if(!window.katex&&!fraction)variable.style.fontStyle='italic';
+    target.appendChild(variable);
+    position=match.index+match[0].length;
+  }
+  target.appendChild(document.createTextNode(text.slice(position)));
+}
+function showSolution(){
+  if(current.operation){
+    const target=$('solution-answer');target.textContent='';
+    function addMathLine(latex){const line=document.createElement('div');line.style.padding='6px 0';renderMath(line,latex);target.appendChild(line);}
+    addMathLine(current.latex);
+    if(current.operation==='fraction-divide')addMathLine('= '+current.reciprocalLatex);
+    addMathLine('= '+current.combinedLatex);
+    addMathLine('= '+finalAnswer(current));
+    if(current.operation==='fraction-divide'){
+      const explanation=document.createElement('strong');
+      explanation.textContent='To divide by a fraction, change the divide to a times and swap the numerator and denominator of the second fraction.';
+      explanation.style.display='block';explanation.style.fontSize='15px';explanation.style.margin='20px 0 8px';explanation.style.whiteSpace='normal';
+      target.appendChild(explanation);
+      addMathLine(current.reciprocalLatex);
+    }
+  }else renderMath($('solution-answer'),current.latex+' = '+finalAnswer(current));
+  const steps=variables.map((v,i)=>{
+    const left=current.left[i],right=current.right[i];
+    if(left===0&&right===0)return '';
+    if(current.type==='divide'){
+      if(right===0)return `${v} appears only in the numerator, so its power stays as ${left}.`;
+      if(left===0)return `${v} appears only in the denominator, so it stays in the denominator with power ${right}.`;
+      const difference=left-right;
+      return `Subtract the powers of ${v}: ${left} − ${right} = ${difference}.`+(difference===0?' The powers cancel.':difference<0?` Write ${v} in the denominator with power ${-difference}.`:'');
+    }
+    if(left===0||right===0)return `${v} appears in only one factor, so its power stays as ${current.p[i]}.`;
+    return `Add the powers of ${v}: ${left} + ${right} = ${current.p[i]}`;
+  }).filter(Boolean).join('\n');
+  const factor=gcd(current.n1,current.n2);
+  const coefficientStep=current.type==='divide'?(factor>1?`Reduce the coefficients: ${current.n1}/${current.n2} = ${current.n2/factor===1?current.n1/factor:(current.n1/factor)+'/'+(current.n2/factor)} (divide both by ${factor}).`:`The coefficient fraction ${current.n1}/${current.n2} is already in lowest terms.`):`Multiply the coefficients: ${current.n1} × ${current.n2} = ${current.c}.`;
+  const reminders=[];
+  if(current.p.some(n=>Math.abs(n)===1))reminders.push('Write variables with power 1 without the exponent.');
+  if(current.type==='divide'){
+    const topHasVariables=current.p.some(n=>n>0),bottomHasVariables=current.p.some(n=>n<0);
+    if((current.n1/factor===1&&topHasVariables)||(current.n2/factor===1&&bottomHasVariables))reminders.push('Leave out the coefficient of 1 in front of variables.');
+  }else if(current.c===1&&current.p.some(n=>n!==0))reminders.push('Leave out the coefficient of 1 in front of variables.');
+  const combination=[];
+  if(current.operation){
+    const ns=current.coefficients,ps=current.powers,[u,v]=current.upper,[d,e]=current.lower;
+    combination.push(`Numerator coefficients: ${ns[u]} × ${ns[v]} = ${current.n1}.`);
+    combination.push(`Denominator coefficients: ${ns[d]} × ${ns[e]} = ${current.n2}.`);
+    for(let i=0;i<3;i++){
+      if(ps[u][i]>0&&ps[v][i]>0)combination.push(`Add numerator powers of ${variables[i]}: ${ps[u][i]} + ${ps[v][i]} = ${current.left[i]}.`);
+      if(ps[d][i]>0&&ps[e][i]>0)combination.push(`Add denominator powers of ${variables[i]}: ${ps[d][i]} + ${ps[e][i]} = ${current.right[i]}.`);
+    }
+  }
+  if(current.operation){
+    const target=$('working');target.textContent='';target.style.marginTop='20px';
+    const heading=document.createElement('strong');
+    heading.textContent='Combine the fractions';
+    target.appendChild(heading);
+    const combineInstruction=document.createElement('div');combineInstruction.textContent='Multiply the numerators together and the denominators together to create a single fraction.';combineInstruction.style.marginTop='8px';target.appendChild(combineInstruction);
+    const combining=document.createElement('div');combining.style.marginTop='8px';
+    renderWorking(combination.join('\n'),combining);target.appendChild(combining);
+    const intermediate=document.createElement('div');intermediate.className='solution-answer';
+    renderMath(intermediate,current.combinedLatex);target.appendChild(intermediate);
+    const simplifyHeading=document.createElement('strong');
+    simplifyHeading.textContent='Simplify';
+    simplifyHeading.style.display='block';simplifyHeading.style.marginTop='20px';target.appendChild(simplifyHeading);
+    const simplifying=document.createElement('div');simplifying.style.marginTop='8px';
+    renderWorking([coefficientStep,steps,...reminders].filter(Boolean).join('\n'),simplifying);target.appendChild(simplifying);
+    const finalLabel=document.createElement('strong');finalLabel.textContent=colonSpacing('Final answer:');
+    finalLabel.style.display='block';finalLabel.style.marginTop='16px';target.appendChild(finalLabel);
+    const finalResult=document.createElement('div');finalResult.className='solution-answer';
+    renderMath(finalResult,finalAnswer(current));target.appendChild(finalResult);
+  }else{
+    const target=$('working');target.textContent='';
+    const heading=document.createElement('strong');heading.className='step-heading';
+    heading.textContent=current.type==='divide'?'Simplify':'Combine the terms';target.appendChild(heading);
+    const details=document.createElement('div');renderWorking([coefficientStep,steps,...reminders].filter(Boolean).join('\n'),details);target.appendChild(details);
+    const label=document.createElement('strong');label.className='step-heading';label.textContent=colonSpacing('Final answer:');target.appendChild(label);
+    const answer=document.createElement('div');answer.className='solution-answer';renderMath(answer,finalAnswer(current));target.appendChild(answer);
+  }
+  $('solution').hidden=false;$('show-solution').setAttribute('aria-expanded','true');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!window.katex){$('render-status').hidden=false;$('render-status').textContent='Connect to the internet and reload for maths formatting.';}
+  $('form').addEventListener('submit',event=>{event.preventDefault();try{const verdict=assessAnswer(current,$('answer').value);displayFeedback($('feedback'),verdict.kind,verdict.text);}catch(error){displayFeedback($('feedback'),'input',error.message);}});
+  $('answer').addEventListener('input',updatePreview);
+  $('next').addEventListener('click',()=>{newQuestion();$('answer').focus();});
+  $('show-solution').addEventListener('click',showSolution);
+  newQuestion();
+});
+
+}
+mountActivity('','multiply');
+mountActivity('division-','divide');
+mountActivity('fraction-multiply-','fraction-multiply');
+mountActivity('fraction-divide-','fraction-divide');
+</script></body></html>

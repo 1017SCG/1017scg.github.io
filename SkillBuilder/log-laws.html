@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Log Laws | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:28px 24px}.prompt{margin:0 0 16px;color:#58645f;font-size:15px}.math{font-size:30px;overflow-x:auto;padding:12px 0 24px;min-height:80px}math{font-size:1em}form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}input,button{font:inherit;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}input{width:270px;max-width:100%;min-width:0}button{cursor:pointer;background:#f5f7f5;color:#263a30}button[type=submit]{background:#285b45;color:white;border-color:#285b45}button:hover{filter:brightness(.95)}:focus-visible{outline:3px solid #b87f20;outline-offset:2px}.hint{font-size:13px;color:#58645f;margin-top:12px}.feedback{font-size:15px;margin-top:18px;min-height:48px}.good{color:#20623e}.bad{color:#a23e26}.close{color:#875c0b}@media(max-width:480px){main{padding:22px 16px}input{width:100%}button{font-size:14px}.math{font-size:26px}}
+.answer-row{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:18px;align-items:center;width:100%}.preview{min-height:48px;overflow-x:auto;padding:8px 0;font-size:23px}.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}.preview-label{font:12px/1.5 system-ui,sans-serif;color:#68736d;display:block}.answer-row input{width:100%}@media(max-width:480px){.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.preview{font-size:19px}}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}.solution[hidden]{display:none}.solution-answer{font-size:24px;overflow-x:auto;margin-bottom:10px}.solution p{margin:0;font-size:15px}
+.step{margin:18px 0}.step p{margin:0 0 6px;font-size:14px}.step-maths{font-size:23px;overflow-x:auto;overflow-y:hidden;padding:12px 0;line-height:normal}.step-maths .katex{display:inline-block;vertical-align:middle}.rule{font-size:14px;margin-bottom:16px!important}.final-label{display:block;margin-top:20px}#answer{width:200px}
+h1{font-size:24px;font-weight:650;margin:0 0 20px}.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+
+/* Shared Skill Builder presentation, kept inline so each activity remains standalone. */
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+h2{font-size:19px;font-weight:650;margin:0 0 12px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{width:270px;max-width:100%;padding:9px 12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+.rule-heading,.final-heading,.step-heading,.final-label{display:block;font-size:15px;font-weight:700;margin:16px 0 8px}
+.rule-heading:first-child,.step-heading:first-child{margin-top:0}
+.solution-answer,.step-maths{padding:10px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.solution-answer .katex,.step-maths .katex,.preview .katex{display:inline-block;vertical-align:middle}
+.preview{min-height:56px;padding:12px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}
+.preview-label{display:block;font-size:12px;color:#68736d}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}.preview{font-size:19px}.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.answer-row input{width:100%}}
+</style>
+</head>
+<body><main aria-label="Log laws practice"><a class="back-link" href="index.html">← Skill Builder</a>
+<h1>Log Laws</h1>
+<p class="prompt">Evaluate. Enter a single integer. Try to complete these questions without a calculator.</p>
+<div id="question" class="math"></div>
+<form id="form"><input id="answer" aria-label="Your answer" aria-describedby="feedback" autocomplete="off" placeholder="Your answer"><div class="actions"><button type="submit">Check Answer</button><button type="button" id="next">New Question</button><button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button></div></form>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="solution" class="solution" hidden></div>
+<p id="render-status" class="hint" role="status" hidden></p>
+</main><script>
+'use strict';
+const randomInt=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+const powerLimits={2:6,3:4,4:3,5:3,10:3};
+const bases=Object.keys(powerLimits).map(Number);
+const log=(base,argument)=>`\\log_{${base}}\\left(${argument}\\right)`;
+let typeBag=[],quotientBag=[],powerBag=[],powerBaseBag=[];
+function shuffle(values){const a=[...values];for(let i=a.length-1;i>0;i--){const j=randomInt(0,i);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function isIntegerPower(base,value){
+  if(!Number.isInteger(value)||value<1)return false;
+  while(value>1&&value%base===0)value/=base;
+  return value===1;
+}
+const productCases=[],differenceCases=[];
+for(const base of [4,6,8,9,10,12])for(const answer of [1,2,3]){
+  const target=base**answer;
+  for(let M=2;M<=Math.sqrt(target);M++){
+    if(target%M!==0)continue;
+    const N=target/M;
+    if(M<=10&&N<=10&&!isIntegerPower(base,M)&&!isIntegerPower(base,N))productCases.push({base,M,N,answer});
+  }
+}
+for(const base of bases)for(let exponent=1;exponent<=powerLimits[base];exponent++)for(let factor=2;factor<=9;factor++){
+  const M=factor*base**exponent,N=factor;
+  if(M>(base===10?1000:125)||isIntegerPower(base,M)||isIntegerPower(base,N))continue;
+  differenceCases.push({base,M,N,answer:exponent},{base,M:N,N:M,answer:-exponent});
+}
+function generateQuestion(forced,quotientForm){
+  if(!typeBag.length)typeBag=shuffle(['product','quotient','power','base','one']);
+  const type=forced||typeBag.pop();let base=bases[randomInt(0,bases.length-1)],limit=powerLimits[base];
+  let m,n,M,N,p,form,answer,latex;
+  if(type==='product'){
+    const selected=productCases[randomInt(0,productCases.length-1)];({base,M,N,answer}=selected);if(Math.random()<0.5)[M,N]=[N,M];latex=log(base,M)+' + '+log(base,N);
+  }else if(type==='quotient'){
+    if(!quotientBag.length)quotientBag=shuffle(['difference','reciprocal']);form=quotientForm||quotientBag.pop();
+    if(form==='reciprocal'){m=0;n=randomInt(1,limit);M=1;N=base**n;answer=-n;latex=log(base,`\\frac{1}{${N}}`);}
+    else{({base,M,N,answer}=differenceCases[randomInt(0,differenceCases.length-1)]);latex=log(base,M)+' - '+log(base,N);}
+  }else if(type==='power'){
+    if(!powerBag.length)powerBag=shuffle([2,3,4,5]);p=powerBag.pop();
+    if(!powerBaseBag.length)powerBaseBag=shuffle(['same','different']);const style=powerBaseBag.pop();
+    const cases=[];for(const candidateBase of bases)for(let exponent=1;exponent<=powerLimits[candidateBase];exponent++){
+      if(candidateBase**exponent<=10&&p*exponent<=10&&(style==='same'?exponent===1:exponent>1))cases.push({base:candidateBase,m:exponent});
+    }
+    ({base,m}=cases[randomInt(0,cases.length-1)]);M=base**m;answer=m*p;latex=log(base,`${M}^{${p}}`);
+  }else if(type==='base'){answer=1;latex=log(base,base);}
+  else{answer=0;latex=log(base,1);}
+  return {type,form,base,m,n,M,N,p,answer,latex};
+}
+function assessAnswer(q,text){
+  const s=text.trim().replace(/[−–]/g,'-');
+  if(!s)return {kind:'input',text:'Check your input. Enter your answer as a single integer.'};
+  if(s.length>50||!(/^[+-]?\d+$/.test(s)))return {kind:'input',text:'Check your input. Evaluate fully and enter a single integer, rather than a logarithm or an expression. Use - for a negative answer.'};
+  const answer=Number(s);if(answer===q.answer)return {kind:'good',text:'Correct!'};
+  if(q.answer<0&&answer===-q.answer)return {kind:'bad',text:'Not quite. Check the sign. With these bases, the logarithm of a number between 0 and 1 is negative.'};
+  const hints={
+    product:'Adding logarithms with the same base means multiplying their arguments. Then find the power of the base that gives that number.',
+    quotient:q.form==='reciprocal'?'Use the second log law to split the fraction into a subtraction. Evaluate each logarithm, then subtract.':'Subtracting logarithms with the same base means dividing their arguments. Check the order of the division and the sign of your answer.',
+    power:'Bring the power in front of the logarithm as a multiplier. Evaluate the logarithm, then multiply.',
+    base:'Think about what power the base must be raised to in order to give the base itself.',
+    one:'Think about what power a nonzero number must be raised to in order to give 1.'
+  };
+  return {kind:'bad',text:'Not quite. '+hints[q.type]};
+}
+function solutionSteps(q){
+  const {base,m,n,M,N,p}=q,steps=[];
+  if(q.type==='product'){
+    steps.push(['Use the first log law','Add logarithms by multiplying the arguments.',`${q.latex}=${log(base,`${M}\\times ${N}`)}`]);
+    steps.push(['Multiply the arguments','',`${log(base,`${M}\\times ${N}`)}=${log(base,M*N)}`]);
+    steps.push(['Identify the power','A logarithm asks for the power of the base.',`${base}^{${q.answer}}=${M*N}\\quad\\Rightarrow\\quad ${log(base,M*N)}=${q.answer}`]);
+  }else if(q.type==='quotient'&&q.form==='reciprocal'){
+    steps.push(['Use the second log law','Split the fraction into the logarithm of the numerator minus the logarithm of the denominator.',`${q.latex}=${log(base,1)}-${log(base,N)}`]);
+    steps.push(['Evaluate the logarithms','Use the zero power and the power that gives the denominator.',`${base}^0=1\\quad\\text{and}\\quad ${base}^{${n}}=${N}`]);
+    steps.push(['Subtract','',`${log(base,1)}-${log(base,N)}=0-${n}=${q.answer}`]);
+  }else if(q.type==='quotient'){
+    const argument=q.answer>=0?String(base**q.answer):`\\frac{1}{${base**(-q.answer)}}`;
+    steps.push(['Use the second log law','Subtract logarithms by dividing their arguments.',`${q.latex}=${log(base,`\\frac{${M}}{${N}}`)}`]);
+    steps.push(['Simplify the argument','',`${log(base,`\\frac{${M}}{${N}}`)}=${log(base,argument)}`]);
+    if(q.answer<0){
+      const denominator=base**(-q.answer);
+      steps.push(['Use the second log law again','Split the fraction into a subtraction, then evaluate the logarithms.',`${log(base,argument)}=${log(base,1)}-${log(base,denominator)}=0-${-q.answer}=${q.answer}`]);
+    }else steps.push(['Identify the power','',`${base}^{${q.answer}}=${argument}\\quad\\Rightarrow\\quad ${log(base,argument)}=${q.answer}`]);
+  }else if(q.type==='power'){
+    steps.push(['Use the third log law','Bring the power in front as a multiplier.',`${q.latex}=${p}\\times ${log(base,M)}`]);
+    steps.push(['Evaluate the logarithm','',`${base}^{${m}}=${M}\\quad\\Rightarrow\\quad ${log(base,M)}=${m}`]);
+    steps.push(['Multiply','',`${p}\\times ${m}=${q.answer}`]);
+  }else if(q.type==='base'){
+    steps.push(['Use the power of 1','Any number raised to the power 1 is itself.',`${base}^1=${base}`]);
+    steps.push(['Evaluate','The logarithm is the required power.',`${q.latex}=1`]);
+  }else{
+    steps.push(['Use the zero power','Any nonzero number raised to the power 0 equals 1.',`${base}^0=1`]);
+    steps.push(['Evaluate','The logarithm is the required power.',`${q.latex}=0`]);
+  }
+  return steps;
+}
+const $=id=>document.getElementById(id);
+function renderMath(target,latex){if(window.katex)window.katex.render(latex,target,{throwOnError:false,output:'htmlAndMathml'});else target.textContent=latex;}
+let current;
+function newQuestion(){current=generateQuestion();renderMath($('question'),current.latex);$('answer').value='';$('feedback').textContent='';$('feedback').className='feedback';$('solution').hidden=true;$('solution').textContent='';$('show-solution').setAttribute('aria-expanded','false');}
+function showSolution(){
+  const target=$('solution');target.textContent='';
+  for(const [heading,explanation,latex] of solutionSteps(current)){
+    const row=document.createElement('div');row.className='step';const title=document.createElement('strong');title.textContent=heading;row.appendChild(title);
+    if(explanation){const p=document.createElement('p');p.textContent=explanation;row.appendChild(p);}
+    const maths=document.createElement('div');maths.className='step-maths';renderMath(maths,latex);row.appendChild(maths);target.appendChild(row);
+  }
+  const label=document.createElement('strong');label.className='final-label';label.textContent='Final answer:\u00a0\u00a0\u00a0';target.appendChild(label);
+  const answer=document.createElement('div');answer.className='step-maths';renderMath(answer,String(current.answer));target.appendChild(answer);target.hidden=false;$('show-solution').setAttribute('aria-expanded','true');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!window.katex){$('render-status').hidden=false;$('render-status').textContent='Connect to the internet and reload for maths formatting.';}
+  $('form').addEventListener('submit',event=>{event.preventDefault();const verdict=assessAnswer(current,$('answer').value);$('feedback').textContent=verdict.text;$('feedback').className='feedback '+verdict.kind;});
+  $('next').addEventListener('click',()=>{newQuestion();$('answer').focus();});$('show-solution').addEventListener('click',showSolution);newQuestion();
+});
+
+</script></body></html>

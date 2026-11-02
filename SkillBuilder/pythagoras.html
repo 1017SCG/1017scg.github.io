@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pythagoras | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:28px 24px}.prompt{margin:0 0 16px;color:#58645f;font-size:15px}.math{font-size:30px;overflow-x:auto;padding:12px 0 24px;min-height:80px}math{font-size:1em}form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}input,button{font:inherit;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}input{width:270px;max-width:100%;min-width:0}button{cursor:pointer;background:#f5f7f5;color:#263a30}button[type=submit]{background:#285b45;color:white;border-color:#285b45}button:hover{filter:brightness(.95)}:focus-visible{outline:3px solid #b87f20;outline-offset:2px}.hint{font-size:13px;color:#58645f;margin-top:12px}.feedback{font-size:15px;margin-top:18px;min-height:48px}.good{color:#20623e}.bad{color:#a23e26}.close{color:#875c0b}@media(max-width:480px){main{padding:22px 16px}input{width:100%}button{font-size:14px}.math{font-size:26px}}
+.answer-row{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:18px;align-items:center;width:100%}.preview{min-height:48px;overflow-x:auto;padding:8px 0;font-size:23px}.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}.preview-label{font:12px/1.5 system-ui,sans-serif;color:#68736d;display:block}.answer-row input{width:100%}@media(max-width:480px){.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.preview{font-size:19px}}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}.solution[hidden]{display:none}.solution-answer{font-size:24px;overflow-x:auto;margin-bottom:10px}.solution p{margin:0;font-size:15px}
+.step{margin:18px 0}.step p{margin:0 0 6px;font-size:14px}.step-maths{font-size:23px;overflow-x:auto;overflow-y:hidden;padding:12px 0;line-height:normal}.step-maths .katex{display:inline-block;vertical-align:middle}.rule{font-size:14px;margin-bottom:16px!important}.final-label{display:block;margin-top:20px}#answer{width:200px}
+h1{font-size:24px;font-weight:650;margin:0 0 20px}.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+
+/* Shared Skill Builder presentation, kept inline so each activity remains standalone. */
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+h2{font-size:19px;font-weight:650;margin:0 0 12px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{width:270px;max-width:100%;padding:9px 12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+.rule-heading,.final-heading,.step-heading,.final-label{display:block;font-size:15px;font-weight:700;margin:16px 0 8px}
+.rule-heading:first-child,.step-heading:first-child{margin-top:0}
+.solution-answer,.step-maths{padding:10px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.solution-answer .katex,.step-maths .katex,.preview .katex{display:inline-block;vertical-align:middle}
+.preview{min-height:56px;padding:12px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}
+.preview-label{display:block;font-size:12px;color:#68736d}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}.preview{font-size:19px}.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.answer-row input{width:100%}}
+.diagram{margin:4px 0 22px}.diagram svg{display:block;width:100%;max-width:540px;height:auto;margin:auto}.diagram text{font:20px system-ui,sans-serif;fill:#25312f;paint-order:stroke;stroke:white;stroke-width:6px;stroke-linejoin:round}.diagram text.unknown{font:italic 25px Georgia,serif;fill:#285b45}.diagram .edge{stroke:#25312f;stroke-width:2.5;fill:none}.diagram .right-angle{stroke:#58645f;stroke-width:1.8;fill:none}#answer{width:270px}.working-step{margin:16px 0}.working-step p{font-size:15px;margin:6px 0}.diagram-caption{text-align:center;font-size:13px;color:#68736d;margin:0}
+</style>
+</head>
+<body><main aria-label="Pythagoras practice">
+<a class="back-link" href="index.html">← Skill Builder</a>
+<h1>Pythagoras</h1>
+<p class="prompt">Find x. Round to two decimal places and include units in your answer.</p>
+<div id="diagram" class="diagram"></div>
+<form id="form"><input id="answer" aria-label="Unknown side length, including units" aria-describedby="hint feedback" autocomplete="off" spellcheck="false" placeholder="For example: 5 cm"><div class="actions"><button type="submit">Check Answer</button><button type="button" id="next">New Question</button><button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button></div></form>
+<p id="hint" class="hint">Use mm, cm, m or km.</p>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="solution" class="solution" hidden></div>
+<p id="render-status" class="hint" hidden></p>
+</main><script>
+'use strict';
+const randomInt=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+const unitScale={mm:1n,cm:10n,m:1000n,km:1000000n};
+let unitBag=[],sideBag=[];
+function shuffle(values){const a=[...values];for(let i=a.length-1;i>0;i--){const j=randomInt(0,i);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function generateQuestion(){
+  if(!unitBag.length)unitBag=shuffle(['mm','cm','m','km']);
+  if(!sideBag.length)sideBag=shuffle(['hypotenuse','leg']);
+  const kind=sideBag.pop(),unknown=kind==='hypotenuse'?2:randomInt(0,1);
+  let lengths,square;
+  if(unknown===2){
+    const a=randomInt(2,20),b=randomInt(2,20);square=a*a+b*b;lengths=[a,b,Math.sqrt(square)];
+  }else{
+    const hypotenuse=randomInt(5,25),known=randomInt(2,hypotenuse-1);square=hypotenuse*hypotenuse-known*known;
+    lengths=unknown===0?[Math.sqrt(square),known,hypotenuse]:[known,Math.sqrt(square),hypotenuse];
+  }
+  return {lengths,unknown,kind,square,unit:unitBag.pop(),answer:lengths[unknown],mirrorX:Math.random()<0.5,mirrorY:Math.random()<0.5};
+}
+function diagramGeometry(q){
+  const ratio=q.lengths[0]/q.lengths[1],visualRatio=Math.max(0.8,Math.min(1.5,ratio));
+  const height=200,width=height*visualRatio;
+  const transform=([x,y])=>[q.mirrorX?520-x:x,q.mirrorY?320-y:y];
+  return {r:transform([260-width/2,260]),p:transform([260+width/2,260]),t:transform([260-width/2,60]),adjusted:Math.abs(visualRatio-ratio)>1e-10};
+}
+function diagramMarkup(q){
+  const {r,p,t,adjusted}=diagramGeometry(q);
+  const points=[r,p,t],centroid=[points.reduce((s,v)=>s+v[0],0)/3,points.reduce((s,v)=>s+v[1],0)/3];
+  const edges=[[r,p],[r,t],[p,t]];
+  const labels=edges.map(([v,w],i)=>{
+    const midpoint=[(v[0]+w[0])/2,(v[1]+w[1])/2],dx=w[0]-v[0],dy=w[1]-v[1],length=Math.hypot(dx,dy);
+    let normal=[-dy/length,dx/length];
+    if(normal[0]*(midpoint[0]-centroid[0])+normal[1]*(midpoint[1]-centroid[1])<0)normal=normal.map(n=>-n);
+    const x=midpoint[0]+normal[0]*30,y=midpoint[1]+normal[1]*30;
+    return `<text x="${x.toFixed(2)}" y="${y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle"${i===q.unknown?' class="unknown"':''}>${i===q.unknown?'x':q.lengths[i]+' '+q.unit}</text>`;
+  }).join('');
+  const horizontal=Math.hypot(p[0]-r[0],p[1]-r[1]),vertical=Math.hypot(t[0]-r[0],t[1]-r[1]);
+  const u=[(p[0]-r[0])/horizontal,(p[1]-r[1])/horizontal],v=[(t[0]-r[0])/vertical,(t[1]-r[1])/vertical],size=15;
+  const corner=[[r[0]+u[0]*size,r[1]+u[1]*size],[r[0]+(u[0]+v[0])*size,r[1]+(u[1]+v[1])*size],[r[0]+v[0]*size,r[1]+v[1]*size]];
+  const description='Right-angled triangle. '+edges.map((_,i)=>(i===2?'Hypotenuse':'Shorter side '+(i+1))+': '+(i===q.unknown?'unknown x':q.lengths[i]+' '+q.unit)).join('. ')+'.'+(adjusted?' Diagram not to scale.':'');
+  return `<svg viewBox="0 0 520 320" role="img" aria-labelledby="triangle-title triangle-description"><title id="triangle-title">Find the unknown side x</title><desc id="triangle-description">${description}</desc><path class="edge" d="M ${r.join(' ')} L ${p.join(' ')} L ${t.join(' ')} Z"/><polyline class="right-angle" points="${corner.map(v=>v.join(',')).join(' ')}"/>${labels}</svg>${adjusted?'<p class="diagram-caption">Diagram not to scale</p>':''}`;
+}
+function quantityEquals(number,unit,q){
+  const inQuestionUnits=Number(number)*Number(unitScale[unit])/Number(unitScale[q.unit]);
+  return Number.isFinite(inQuestionUnits)&&Math.abs(inQuestionUnits-q.answer)<=0.01+1e-10;
+}
+function assessAnswer(q,text){
+  const s=text.trim().toLowerCase();
+  if(!s)return {kind:'input',text:'Check your input. Enter the side length and its units, for example 5 cm.'};
+  if(s.length>100)return {kind:'input',text:'Check your input. Enter a number followed by mm, cm, m or km.'};
+  if(/(?:mm|cm|km|m)\s*(?:²|\^2|2)$/.test(s))return {kind:'input',text:'Check your input. A side length needs length units, not squared units. Check that you have taken the square root.'};
+  const match=s.match(/^(\d+(?:\.\d+)?)\s*(mm|cm|km|m)?$/);
+  if(!match)return {kind:'input',text:'Check your input. Enter a number followed by mm, cm, m or km, for example 5 cm.'};
+  const [,number,unit]=match;
+  if(!unit){
+    if(quantityEquals(number,q.unit,q))return {kind:'close',text:'You’re close! The number is correct. Include the units in your final answer.'};
+    return {kind:'bad',text:'Not quite. Check your calculation and include the units in your answer.'};
+  }
+  if(quantityEquals(number,unit,q))return {kind:'good',text:'Correct!'};
+  if(Number(number)===(q.square??q.answer*q.answer)&&unit===q.unit)return {kind:'bad',text:'Not quite. You have found x squared. Take the square root to find the side length, then include the units.'};
+  if(Math.abs(Number(number)-q.answer)<=0.01+1e-10&&unit!==q.unit)return {kind:'bad',text:'Not quite. Check your units. The diagram uses '+q.unit+'.'};
+  return {kind:'bad',text:q.unknown===2?'Not quite. The hypotenuse will be the longest side of the right-angled triangle.':`Not quite. As the hypotenuse is ${q.lengths[2]} ${q.unit}, side x must be shorter than ${q.lengths[2]} ${q.unit}.`};
+}
+function solutionSteps(q){
+  const [a,b,c]=q.lengths,known=q.unknown===0?b:a,square=q.square;
+  const equality=Number.isInteger(q.answer)?'=':'\\approx';
+  if(q.unknown===2)return [
+    ['Identify the hypotenuse','The unknown side is opposite the right angle, so it is the hypotenuse.','a^2+b^2=c^2'],
+    ['Substitute the known lengths','Add the squares of the two shorter sides.',`${a}^2+${b}^2=x^2`],
+    ['Calculate the squares','',`${a*a}+${b*b}=x^2`],
+    ['Add','',`x^2=${square}`],
+    ['Take the square root','Round to two decimal places.',`x=\\sqrt{${square}}${equality}${q.answer.toFixed(2)}`]
+  ];
+  return [
+    ['Identify the hypotenuse','The hypotenuse is opposite the right angle. Its length is '+c+' '+q.unit+'.','a^2+b^2=c^2'],
+    ['Substitute the known lengths','The unknown is a shorter side.',`x^2+${known}^2=${c}^2`],
+    ['Calculate the squares','',`x^2+${known*known}=${c*c}`],
+    ['Rearrange','Subtract the square of the known shorter side.',`x^2=${c*c}-${known*known}`],
+    ['Subtract','',`x^2=${square}`],
+    ['Take the square root','Round to two decimal places.',`x=\\sqrt{${square}}${equality}${q.answer.toFixed(2)}`]
+  ];
+}
+const $=id=>document.getElementById(id);
+function renderMath(target,latex){if(window.katex)window.katex.render(latex,target,{throwOnError:false,output:'htmlAndMathml'});else target.textContent=latex;}
+let current;
+function newQuestion(){current=generateQuestion();$('diagram').innerHTML=diagramMarkup(current);$('answer').value='';$('feedback').textContent='';$('feedback').className='feedback';$('solution').hidden=true;$('solution').textContent='';$('show-solution').setAttribute('aria-expanded','false');}
+function showSolution(){
+  const target=$('solution');target.textContent='';
+  for(const [heading,explanation,latex] of solutionSteps(current)){
+    const row=document.createElement('div');row.className='working-step';
+    const title=document.createElement('strong');title.textContent=heading;row.appendChild(title);
+    if(explanation){const text=document.createElement('p');text.textContent=explanation;row.appendChild(text);}
+    const maths=document.createElement('div');maths.className='solution-answer';renderMath(maths,latex);row.appendChild(maths);target.appendChild(row);
+  }
+  const label=document.createElement('strong');label.className='final-label';label.textContent='Final answer:\u00a0\u00a0\u00a0';target.appendChild(label);
+  const result=document.createElement('div');result.className='solution-answer';renderMath(result,`x${Number.isInteger(current.answer)?'=':'\\approx'}${current.answer.toFixed(2)}\\,\\mathrm{${current.unit}}`);target.appendChild(result);
+  target.hidden=false;$('show-solution').setAttribute('aria-expanded','true');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!window.katex){$('render-status').hidden=false;$('render-status').textContent='Connect to the internet and reload for maths formatting.';}
+  $('form').addEventListener('submit',event=>{event.preventDefault();const verdict=assessAnswer(current,$('answer').value);$('feedback').textContent=verdict.text;$('feedback').className='feedback '+verdict.kind;});
+  $('next').addEventListener('click',()=>{newQuestion();$('answer').focus();});
+  $('show-solution').addEventListener('click',showSolution);
+  newQuestion();
+});
+
+</script></body></html>

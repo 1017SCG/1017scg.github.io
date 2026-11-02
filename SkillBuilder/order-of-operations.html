@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order of Operations | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:28px 24px}.prompt{margin:0 0 16px;color:#58645f;font-size:15px}.math{font-size:30px;overflow-x:auto;padding:12px 0 24px;min-height:80px}math{font-size:1em}form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}input,button{font:inherit;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}input{width:270px;max-width:100%;min-width:0}button{cursor:pointer;background:#f5f7f5;color:#263a30}button[type=submit]{background:#285b45;color:white;border-color:#285b45}button:hover{filter:brightness(.95)}:focus-visible{outline:3px solid #b87f20;outline-offset:2px}.hint{font-size:13px;color:#58645f;margin-top:12px}.feedback{font-size:15px;margin-top:18px;min-height:48px}.good{color:#20623e}.bad{color:#a23e26}.close{color:#875c0b}@media(max-width:480px){main{padding:22px 16px}input{width:100%}button{font-size:14px}.math{font-size:26px}}
+.answer-row{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:18px;align-items:center;width:100%}.preview{min-height:48px;overflow-x:auto;padding:8px 0;font-size:23px}.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}.preview-label{font:12px/1.5 system-ui,sans-serif;color:#68736d;display:block}.answer-row input{width:100%}@media(max-width:480px){.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.preview{font-size:19px}}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}.solution[hidden]{display:none}.solution-answer{font-size:24px;overflow-x:auto;margin-bottom:10px}.solution p{margin:0;font-size:15px}
+.step{margin:18px 0}.step p{margin:0 0 6px;font-size:14px}.step-maths{font-size:23px;overflow-x:auto;overflow-y:hidden;padding:12px 0;line-height:normal}.step-maths .katex{display:inline-block;vertical-align:middle}.rule{font-size:14px;margin-bottom:16px!important}.final-label{display:block;margin-top:20px}#answer{width:200px}
+h1{font-size:24px;font-weight:650;margin:0 0 20px}.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+
+/* Shared Skill Builder presentation, kept inline so each activity remains standalone. */
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+h2{font-size:19px;font-weight:650;margin:0 0 12px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{width:270px;max-width:100%;padding:9px 12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+.rule-heading,.final-heading,.step-heading,.final-label{display:block;font-size:15px;font-weight:700;margin:16px 0 8px}
+.rule-heading:first-child,.step-heading:first-child{margin-top:0}
+.solution-answer,.step-maths{padding:10px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.solution-answer .katex,.step-maths .katex,.preview .katex{display:inline-block;vertical-align:middle}
+.preview{min-height:56px;padding:12px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}
+.preview-label{display:block;font-size:12px;color:#68736d}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}.preview{font-size:19px}.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.answer-row input{width:100%}}
+</style>
+</head>
+<body><main aria-label="Order of operations practice"><a class="back-link" href="index.html">← Skill Builder</a>
+<h1>Order of Operations</h1>
+<p class="prompt">Evaluate. Enter a single number.</p>
+<div id="question" class="math"></div>
+<form id="form"><input id="answer" aria-label="Your answer" aria-describedby="feedback" autocomplete="off" inputmode="numeric" placeholder="Your answer"><div class="actions"><button type="submit">Check Answer</button><button type="button" id="next">New Question</button><button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button></div></form>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="solution" class="solution" hidden></div>
+<p id="render-status" class="hint" role="status" hidden></p>
+</main><script>
+'use strict';
+
+function displayFeedback(target,kind,text){
+  const prefixes={bad:'Not quite. ',close:'You’re close! ',input:'Check your input. '};
+  const prefix=prefixes[kind];
+  if(prefix&&!text.startsWith(prefix.trim()))text=prefix+text;
+  target.textContent=text;
+  target.className='feedback '+kind;
+}
+function checkExpressionInput(source){
+  if(!source.trim())throw Error('Enter your answer before checking it.');
+  if(source.length>180)throw Error('Keep your answer to 180 characters or fewer.');
+  const s=source.replace(/\s/g,'');
+  let depth=0;
+  for(const character of s){if(character==='(')depth++;if(character===')')depth--;if(depth<0)throw Error('There is a closing bracket without an opening bracket. Check your brackets.');}
+  if(/\/(?:\()?$/g.test(s))throw Error('The fraction is missing its denominator. Enter a number or expression after /, using brackets around a multi-term denominator.');
+  if(/\^(?:\(?[+-]?)?$/.test(s))throw Error('The power is missing its exponent. Enter an integer after ^, for example x^3.');
+  if(depth!==0)throw Error('An opening bracket is missing its closing bracket. Put the whole denominator inside matching brackets when entering a fraction.');
+  if(/\*\*|\/\/|\^\^/.test(s))throw Error('Check the repeated operation signs. Use one * for multiplication, / for a fraction, or ^ for a power.');
+}
+
+const randomInt=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+const symbols={'+':'+','-':'−','*':'\\times','/':'\\div','^':'^','(':'(',')':')'};
+function makeTokens(text){return text.match(/\d+|[()+*/^\-]/g).map(t=>/^\d+$/.test(t)?Number(t):t);}
+function calculate(a,op,b){switch(op){case '+':return a+b;case '-':return a-b;case '*':return a*b;case '/':return a/b;case '^':return a**b;default:throw Error('Unknown operation');}}
+function nextOperation(tokens){
+  let start=0,end=tokens.length,inside=false;
+  const close=tokens.indexOf(')');
+  if(close!==-1){start=tokens.lastIndexOf('(',close)+1;end=close;inside=true;}
+  for(const group of [['^'],['*','/'],['+','-']]){
+    for(let i=start;i<end;i++)if(group.includes(tokens[i]))return {index:i,inside};
+  }
+  return null;
+}
+function removeFinishedBrackets(tokens){
+  let changed=true;while(changed){changed=false;for(let i=0;i<tokens.length-2;i++)if(tokens[i]==='('&&typeof tokens[i+1]==='number'&&tokens[i+2]===')'){tokens.splice(i,3,tokens[i+1]);changed=true;break;}}
+  return tokens;
+}
+function explain(op,inside){
+  const opening=inside?'Work inside the brackets first. ':'';
+  if(op==='^')return opening+'Evaluate the power before multiplication, division, addition or subtraction.';
+  if(op==='*'||op==='/')return opening+(op==='*'?'Multiply':'Divide')+' next. Multiplication and division have equal priority: work from left to right, before addition and subtraction.';
+  return opening+(op==='+'?'Add':'Subtract')+' next. Addition and subtraction have equal priority: work from left to right.';
+}
+function solve(tokens){
+  let current=removeFinishedBrackets([...tokens]);const steps=[];
+  while(current.length>1){
+    const next=nextOperation(current);if(!next)throw Error('Invalid generated expression');
+    const i=next.index,a=current[i-1],op=current[i],b=current[i+1];
+    if(typeof a!=='number'||typeof b!=='number')throw Error('Invalid operands');
+    const result=calculate(a,op,b);if(!Number.isInteger(result)||result<0||result>100)throw Error('Generated calculation outside mental-arithmetic bounds');
+    const before=[...current];current.splice(i-1,3,result);removeFinishedBrackets(current);
+    steps.push({before,after:[...current],highlight:i-1,a,b,op,result,explanation:explain(op,next.inside)});
+  }
+  return {steps,answer:current[0]};
+}
+function tokensLatex(tokens,highlight=-1){
+  function format(part){let out='';for(let i=0;i<part.length;i++){
+    const t=part[i];if(t==='^'){out+='^{'+part[++i]+'}';}
+    else if(t==='(')out+='\\left(';else if(t===')')out+='\\right)';
+    else out+=typeof t==='number'?String(t):' '+symbols[t]+' ';
+  }return out;}
+  if(highlight<0)return format(tokens);
+  return format(tokens.slice(0,highlight))+'\\underbrace{'+format(tokens.slice(highlight,highlight+3))+'}_{\\text{next}}'+format(tokens.slice(highlight+3));
+}
+function reversesPreviousStep(steps){
+  const inverse={'+':'-','-':'+','*':'/','/':'*'};
+  return steps.some((step,i)=>{
+    if(i===0)return false;
+    const previous=steps[i-1];
+    return inverse[previous.op]===step.op&&step.a===previous.result&&step.result===previous.a&&step.b===previous.b;
+  });
+}
+const questionGroups={
+  precedence:[0,3,8,10],
+  brackets:[1,5,6,7],
+  powers:[2,9,11,12,13],
+  equalPriority:[4,14]
+};
+let categoryBag=[];
+function nextCategory(){
+  if(categoryBag.length===0){
+    categoryBag=Object.keys(questionGroups);
+    for(let i=categoryBag.length-1;i>0;i--){const j=randomInt(0,i);[categoryBag[i],categoryBag[j]]=[categoryBag[j],categoryBag[i]];}
+  }
+  return categoryBag.pop();
+}
+function generateQuestion(template){
+  const category=template===undefined?nextCategory():Object.keys(questionGroups).find(k=>questionGroups[k].includes(template));
+  const a=randomInt(2,6),b=randomInt(2,5),c=randomInt(2,5),d=randomInt(1,5);
+  const multipliers=[2,3,4,5].filter(n=>n!==b);
+  const multiplier=multipliers[randomInt(0,multipliers.length-1)];
+  const templates=[
+    `${a}+${b}*${c}`,
+    `(${a}+${b})*${c}`,
+    `${a}+${b}^2`,
+    `(${a}+${b})*${c}-${d}`,
+    `${b*c}/${b}*${multiplier}`,
+    `${a}*(${b}+(${c}-1))`,
+    `(${a}+${b})*(${randomInt(1,3)}+${randomInt(1,2)})`,
+    `(${a}*${b}+${c}*${b})/${b}`,
+    `${a}+${b}*${c}-${d}`,
+    `(${randomInt(1,3)}+${randomInt(1,3)})^2+${d}`,
+    `${a}+${b*c}/${b}`,
+    `${a*b}/${b}+${c}^2`,
+    `${randomInt(1,4)}+(${randomInt(1,3)}+${randomInt(1,3)})^2`,
+    `(${randomInt(2,4)}^2+${randomInt(1,4)})*2`,
+    `${a}*${b}-${randomInt(1,Math.min(5,a*b-1))}+${c}`
+  ];
+  const candidates=templates.map((text,index)=>{
+    const tokens=makeTokens(text);return {template:index,category:Object.keys(questionGroups).find(k=>questionGroups[k].includes(index)),tokens,...solve(tokens)};
+  }).filter(q=>!reversesPreviousStep(q.steps));
+  const matching=candidates.filter(q=>q.category===category);
+  return matching.find(q=>q.template===template)||matching[randomInt(0,matching.length-1)];
+}
+// Compare a wrong answer with common incorrect ordering methods; never execute student input.
+function variantAnswer(tokens,method){
+  let current=removeFinishedBrackets(method==='ignoreBrackets'?tokens.filter(t=>t!=='('&&t!==')'):[...tokens]);
+  const priorities=method==='multiplyFirst'?[['^'],['*'],['/'],['+','-']]:method==='addFirst'?[['^'],['*','/'],['+'],['-']]:method==='leftToRight'?[['^','*','/','+','-']]:[['^'],['*','/'],['+','-']];
+  while(current.length>1){
+    let start=0,end=current.length;const close=current.indexOf(')');
+    if(close!==-1){start=current.lastIndexOf('(',close)+1;end=close;}
+    let index=-1;
+    for(const group of priorities){for(let i=start;i<end;i++)if(group.includes(current[i])){index=i;break;}if(index!==-1)break;}
+    if(index<1)return NaN;
+    const result=calculate(current[index-1],current[index],current[index+1]);
+    if(!Number.isFinite(result))return NaN;
+    current.splice(index-1,3,result);removeFinishedBrackets(current);
+  }
+  return current[0];
+}
+function mistakeFeedback(q,answer){
+  const matches=method=>Math.abs(variantAnswer(q.tokens,method)-answer)<1e-10;
+  if(q.tokens.includes('(')&&matches('ignoreBrackets'))return 'Not quite. Check the brackets: complete the calculation inside each bracket before using it in the rest of the expression.';
+  if(matches('multiplyFirst'))return 'Not quite. Multiplication and division have equal priority. Work from left to right, rather than doing all multiplication first.';
+  if(matches('addFirst'))return 'Not quite. Addition and subtraction have equal priority. Work from left to right, rather than doing all addition first.';
+  if(matches('leftToRight'))return 'Not quite. Check which operation comes first: powers before multiplication and division, then addition and subtraction.';
+  if(q.tokens.includes('^'))return 'Not quite. Check the brackets and powers first, then work through the remaining operations in order.';
+  if(q.tokens.includes('('))return 'Not quite. Check the calculation inside each bracket, then check the order of the remaining operations.';
+  return 'Not quite. Check the multiplication and division first, then work through addition and subtraction from left to right.';
+}
+function assessAnswer(q,text){
+  const s=text.trim();if(!s)return {kind:'input',text:'Enter your answer as a single number.'};
+  if(!/^\d+$/.test(s))return {kind:'input',text:'Evaluate the expression fully and enter a single whole number.'};
+  if(Number(s)!==q.answer)return {kind:'bad',text:mistakeFeedback(q,Number(s))};
+  return {kind:'good',text:'Correct!'};
+}
+const $=id=>document.getElementById(id);
+function renderMath(target,latex){if(window.katex)window.katex.render(latex,target,{throwOnError:false,output:'htmlAndMathml'});else target.textContent=latex;}
+let current;
+function newQuestion(){current=generateQuestion();renderMath($('question'),tokensLatex(current.tokens));$('answer').value='';$('feedback').textContent='';$('feedback').className='feedback';$('solution').hidden=true;$('solution').textContent='';$('show-solution').setAttribute('aria-expanded','false');}
+function showSolution(){
+  const target=$('solution');target.textContent='';
+  const rule=document.createElement('div');rule.className='rule';
+  const title=document.createElement('strong');title.textContent='Order of Operations';rule.appendChild(title);
+  for(const text of ['Brackets','Powers','Multiplication and Division','Addition and Subtraction']){
+    const line=document.createElement('div');line.textContent=text;rule.appendChild(line);
+  }
+  target.appendChild(rule);
+  current.steps.forEach((step,i)=>{
+    const row=document.createElement('div');row.className='step';
+    const heading=document.createElement('strong');heading.textContent='Step '+(i+1);row.appendChild(heading);
+    const equation=document.createElement('div');equation.className='step-maths';
+    renderMath(equation,tokensLatex(step.before,step.highlight)+' = '+tokensLatex(step.after));row.appendChild(equation);
+    target.appendChild(row);
+  });
+  const label=document.createElement('strong');label.className='final-label';label.textContent='Final answer:\u00a0\u00a0\u00a0';target.appendChild(label);
+  const answer=document.createElement('div');answer.className='step-maths';renderMath(answer,String(current.answer));target.appendChild(answer);
+  target.hidden=false;$('show-solution').setAttribute('aria-expanded','true');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!window.katex){$('render-status').hidden=false;$('render-status').textContent='Connect to the internet and reload for maths formatting.';}
+  $('form').addEventListener('submit',event=>{event.preventDefault();const verdict=assessAnswer(current,$('answer').value);displayFeedback($('feedback'),verdict.kind,verdict.text);});
+  $('next').addEventListener('click',()=>{newQuestion();$('answer').focus();});
+  $('show-solution').addEventListener('click',showSolution);
+  newQuestion();
+});
+
+</script></body></html>

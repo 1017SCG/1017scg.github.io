@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sine and Cosine Rules | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:28px 24px}.prompt{margin:0 0 16px;color:#58645f;font-size:15px}.math{font-size:30px;overflow-x:auto;padding:12px 0 24px;min-height:80px}math{font-size:1em}form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}input,button{font:inherit;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}input{width:270px;max-width:100%;min-width:0}button{cursor:pointer;background:#f5f7f5;color:#263a30}button[type=submit]{background:#285b45;color:white;border-color:#285b45}button:hover{filter:brightness(.95)}:focus-visible{outline:3px solid #b87f20;outline-offset:2px}.hint{font-size:13px;color:#58645f;margin-top:12px}.feedback{font-size:15px;margin-top:18px;min-height:48px}.good{color:#20623e}.bad{color:#a23e26}.close{color:#875c0b}@media(max-width:480px){main{padding:22px 16px}input{width:100%}button{font-size:14px}.math{font-size:26px}}
+.answer-row{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:18px;align-items:center;width:100%}.preview{min-height:48px;overflow-x:auto;padding:8px 0;font-size:23px}.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}.preview-label{font:12px/1.5 system-ui,sans-serif;color:#68736d;display:block}.answer-row input{width:100%}@media(max-width:480px){.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.preview{font-size:19px}}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}.solution[hidden]{display:none}.solution-answer{font-size:24px;overflow-x:auto;margin-bottom:10px}.solution p{margin:0;font-size:15px}
+.step{margin:18px 0}.step p{margin:0 0 6px;font-size:14px}.step-maths{font-size:23px;overflow-x:auto;overflow-y:hidden;padding:12px 0;line-height:normal}.step-maths .katex{display:inline-block;vertical-align:middle}.rule{font-size:14px;margin-bottom:16px!important}.final-label{display:block;margin-top:20px}#answer{width:200px}
+h1{font-size:24px;font-weight:650;margin:0 0 20px}.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+
+/* Shared Skill Builder presentation, kept inline so each activity remains standalone. */
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+h2{font-size:19px;font-weight:650;margin:0 0 12px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{width:270px;max-width:100%;padding:9px 12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+.rule-heading,.final-heading,.step-heading,.final-label{display:block;font-size:15px;font-weight:700;margin:16px 0 8px}
+.rule-heading:first-child,.step-heading:first-child{margin-top:0}
+.solution-answer,.step-maths{padding:10px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.solution-answer .katex,.step-maths .katex,.preview .katex{display:inline-block;vertical-align:middle}
+.preview{min-height:56px;padding:12px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}
+.preview-label{display:block;font-size:12px;color:#68736d}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}.preview{font-size:19px}.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.answer-row input{width:100%}}
+.diagram{margin:4px 0 22px}.diagram svg{display:block;width:100%;max-width:540px;height:auto;margin:auto}.diagram text{font:20px system-ui,sans-serif;fill:#25312f;paint-order:stroke;stroke:white;stroke-width:6px;stroke-linejoin:round}.diagram text.unknown{font:italic 25px Georgia,serif;fill:#285b45}.diagram .edge{stroke:#25312f;stroke-width:2.5;fill:none}.diagram .right-angle{stroke:#58645f;stroke-width:1.8;fill:none}#answer{width:270px}.working-step{margin:16px 0}.working-step p{font-size:15px;margin:6px 0}.diagram-caption{text-align:center;font-size:13px;color:#68736d;margin:0}
+.diagram .angle-arc{stroke:#285b45;stroke-width:1.7;fill:none}.diagram .angle-label{font-size:19px;fill:#285b45}.diagram .angle-label.unknown{font:italic 24px Georgia,serif}
+</style>
+</head>
+<body><main aria-label="Sine and cosine rules practice">
+<a class="back-link" href="index.html">← Skill Builder</a>
+<h1>Sine and Cosine Rules</h1>
+<p id="prompt" class="prompt"></p>
+<div id="diagram" class="diagram"></div>
+<form id="form"><input id="answer" aria-label="Your answer including units or degrees" aria-describedby="hint feedback" autocomplete="off" spellcheck="false" placeholder="Your answer"><div class="actions"><button type="submit">Check Answer</button><button type="button" id="next">New Question</button><button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button></div></form>
+<p id="hint" class="hint"></p>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<div id="solution" class="solution" hidden></div>
+<p id="render-status" class="hint" hidden></p>
+</main><script>
+'use strict';
+const randomInt=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+const rad=a=>a*Math.PI/180,deg=a=>a*180/Math.PI;
+const units={mm:1,cm:10,m:1000,km:1000000};
+const names=['a','b','c'],vertices=['A','B','C'];
+function shuffle(values){const a=[...values];for(let i=a.length-1;i>0;i--){const j=randomInt(0,i);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function anglesFromSides([a,b,c]){const angle=(x,y,z)=>deg(Math.acos(Math.max(-1,Math.min(1,(y*y+z*z-x*x)/(2*y*z)))));return [angle(a,b,c),angle(b,a,c),angle(c,a,b)];}
+function suitable(angles){return angles.every(a=>a>=15&&a<=140&&Math.abs(a-90)>0.1);}
+const sineCases=[];
+for(let a=25;a<=75;a+=5)for(let b=25;b<=75;b+=5){
+  const angles=[a,b,180-a-b];
+  if(a===b||!suitable(angles))continue;
+  for(const shownAngles of [[0,1]]){
+    sineCases.push({A:a,B:b,shownAngles});
+  }
+}
+const uniqueSineCases=[];
+for(let a=6;a<=20;a++)for(let b=3;b<a;b++)for(let A=25;A<=135;A+=5){
+  if(A===90)continue;
+  const B=deg(Math.asin(b*Math.sin(rad(A))/a)),C=180-A-B;
+  if(suitable([A,B,C]))uniqueSineCases.push({a,b,A,B,C,c:a*Math.sin(rad(C))/Math.sin(rad(A))});
+}
+const sideTriples=[];
+for(let a=4;a<=18;a++)for(let b=4;b<=18;b++)for(let c=4;c<=18;c++)if(a+b>c&&a+c>b&&b+c>a&&suitable(anglesFromSides([a,b,c])))sideTriples.push([a,b,c]);
+const includedAngleSets=[];
+for(let b=4;b<=15;b++)for(let c=4;c<=15;c++)for(let A=30;A<=120;A+=10){if(A===90)continue;const a=Math.sqrt(b*b+c*c-2*b*c*Math.cos(rad(A)));if(suitable(anglesFromSides([a,b,c])))includedAngleSets.push([b,c,A]);}
+let typeBag=[],unitBag=[];
+function generateQuestion(forced){
+  if(!typeBag.length)typeBag=shuffle(['sine-side','sine-ssa-angle','cosine-side','cosine-angle']);
+  if(!unitBag.length)unitBag=shuffle(Object.keys(units));
+  const type=forced||typeBag.pop(),unit=unitBag.pop();let sides,angles,knownSides,shownAngles;
+  if(type==='sine-ssa-angle'){
+    const selected=uniqueSineCases[randomInt(0,uniqueSineCases.length-1)];
+    sides=[selected.a,selected.b,selected.c];angles=[selected.A,selected.B,selected.C];knownSides=[0,1];shownAngles=[0];
+  }else if(type==='sine-side'){
+    const selected=sineCases[randomInt(0,sineCases.length-1)],{A,B}=selected,b=randomInt(4,20),C=180-A-B;
+    angles=[A,B,C];sides=[b*Math.sin(rad(A))/Math.sin(rad(B)),b,b*Math.sin(rad(C))/Math.sin(rad(B))];
+    knownSides=[1];shownAngles=[...selected.shownAngles];
+  }else if(type==='cosine-side'){
+    const [b,c,A]=includedAngleSets[randomInt(0,includedAngleSets.length-1)],a=Math.sqrt(b*b+c*c-2*b*c*Math.cos(rad(A)));
+    sides=[a,b,c];angles=anglesFromSides(sides);angles[0]=A;knownSides=[1,2];shownAngles=[0];
+  }else{sides=[...sideTriples[randomInt(0,sideTriples.length-1)]];angles=anglesFromSides(sides);knownSides=[0,1,2];shownAngles=[];}
+  const kind=type==='cosine-angle'||type==='sine-ssa-angle'?'angle':'side',targetSide=0,targetAngle=type==='sine-ssa-angle'?1:0;
+  return {type,kind,targetSide,targetAngle,sides,angles,knownSides,shownAngles,unit,answer:kind==='angle'?angles[targetAngle]:sides[targetSide],mirrorX:Math.random()<0.5,mirrorY:Math.random()<0.5};
+}
+function diagramMarkup(q){
+  const [a,b,c]=q.sides,x=(b*b+c*c-a*a)/(2*c),h=Math.sqrt(Math.max(0,b*b-x*x));
+  const original=[[0,0],[c,0],[x,-h]],xs=original.map(p=>p[0]),minX=Math.min(...xs),maxX=Math.max(...xs);
+  // Use a clear, centred schematic; the drawing is explicitly marked not to scale.
+  const points=original.map(([x,y])=>{let px=110+(x-minX)*300/(maxX-minX),py=255+y*190/h;return [q.mirrorX?520-px:px,q.mirrorY?320-py:py];});
+  const centroid=[points.reduce((s,p)=>s+p[0],0)/3,points.reduce((s,p)=>s+p[1],0)/3];
+  const unit=(a,b)=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return [(b[0]-a[0])/length,(b[1]-a[1])/length];};
+  const sidePairs=[[1,2],[0,2],[0,1]];
+  const labels=sidePairs.map(([j,k],i)=>{
+    const unknown=q.kind==='side'&&i===q.targetSide;if(!unknown&&!q.knownSides.includes(i))return '';
+    const p=points[j],r=points[k],mid=[(p[0]+r[0])/2,(p[1]+r[1])/2],v=unit(p,r);let normal=[-v[1],v[0]];
+    if(normal[0]*(mid[0]-centroid[0])+normal[1]*(mid[1]-centroid[1])<0)normal=normal.map(n=>-n);
+    const anchor=Math.abs(normal[0])>0.35?(normal[0]>0?'start':'end'):'middle',offset=Math.abs(p[0]-r[0])<1e-8?17:28;
+    return `<text x="${mid[0]+offset*normal[0]}" y="${mid[1]+offset*normal[1]}" text-anchor="${anchor}" dominant-baseline="middle">${unknown?names[i]:names[i]+' = '+q.sides[i]+' '+q.unit}</text>`;
+  }).join('');
+  const corners=points.map((p,i)=>{
+    const u=unit(p,points[(i+1)%3]),v=unit(p,points[(i+2)%3]),sum=[u[0]+v[0],u[1]+v[1]],length=Math.hypot(...sum),inside=sum.map(n=>n/length);
+    const vertex=`<text x="${p[0]-25*inside[0]}" y="${p[1]-25*inside[1]}" text-anchor="middle" dominant-baseline="middle">${vertices[i]}</text>`;
+    const unknown=q.kind==='angle'&&i===q.targetAngle;if(!unknown&&!q.shownAngles.includes(i))return vertex;
+    const shortest=Math.min(Math.hypot(points[(i+1)%3][0]-p[0],points[(i+1)%3][1]-p[1]),Math.hypot(points[(i+2)%3][0]-p[0],points[(i+2)%3][1]-p[1]));
+    const radius=Math.min(28,shortest*.2),labelRadius=Math.min(57,shortest*.38),sweep=u[0]*v[1]-u[1]*v[0]>0?1:0;
+    return vertex+`<path class="angle-arc" d="M ${p[0]+radius*u[0]} ${p[1]+radius*u[1]} A ${radius} ${radius} 0 0 ${sweep} ${p[0]+radius*v[0]} ${p[1]+radius*v[1]}"/>${unknown?'':`<text class="angle-label" x="${p[0]+labelRadius*inside[0]}" y="${p[1]+labelRadius*inside[1]}" text-anchor="middle" dominant-baseline="middle">${Math.round(q.angles[i])+'°'}</text>`}`;
+  }).join('');
+  const description=q.knownSides.map(i=>'Side '+names[i]+' = '+q.sides[i]+' '+q.unit).concat(q.shownAngles.map(i=>'Angle '+vertices[i]+' = '+Math.round(q.angles[i])+' degrees')).join('. ')+'. '+(q.kind==='angle'?'Find angle '+vertices[q.targetAngle]+'.':'Find side '+names[q.targetSide]+'.')+' Diagram not to scale.';
+  return `<svg viewBox="-20 0 560 330" role="img" aria-labelledby="triangle-title triangle-description"><title id="triangle-title">Triangle ABC</title><desc id="triangle-description">${description}</desc><path class="edge" d="M ${points.map(p=>p.join(' ')).join(' L ')} Z"/>${labels}${corners}</svg><p class="diagram-caption">Diagram not to scale</p>`;
+}
+function assessAnswer(q,text){
+  const s=text.trim().toLowerCase();if(!s||s.length>100)return {kind:'input',text:'Check your input. Enter a number with '+(q.kind==='angle'?'degrees, for example 20 degrees.':'length units, for example 5.25 cm.')};
+  const match=s.match(/^(\d+(?:\.\d+)?)\s*(°|deg(?:ree)?s?|mm|cm|km|m)?$/);if(!match)return {kind:'input',text:'Check your input. Enter a number followed by '+(q.kind==='angle'?'degrees.':'mm, cm, m or km.')};
+  const number=Number(match[1]),unit=match[2],degree=unit&&(unit==='°'||unit.startsWith('deg'));
+  if(q.kind==='angle'&&unit&&!degree)return {kind:'input',text:'Check your input. Give the angle in degrees.'};
+  if(q.kind==='side'&&degree)return {kind:'input',text:'Check your input. Give the side length in mm, cm, m or km.'};
+  const value=q.kind==='side'&&unit?number*units[unit]/units[q.unit]:number,correct=Math.abs(value-Number(q.answer.toFixed(2)))<=0.01+1e-10;
+  if(correct&&!unit)return {kind:'close',text:q.kind==='angle'?'You’re close! The number is correct. Include degrees in your answer.':'You’re close! The number is correct. Include the length units in your answer.'};
+  if(correct)return {kind:'good',text:'Correct!'};
+  if(q.kind==='angle')return {kind:'bad',text:number<=0||number>=180?'Not quite. An interior angle must be between 0 and 180 degrees.':q.type==='sine-ssa-angle'?'Not quite. Match each side to its opposite angle, then use the sine rule and inverse sine in degree mode.':'Not quite. Use the cosine rule to find cos A, then use inverse cosine in degree mode. Check which side is opposite angle A.'};
+  if(unit&&unit!==q.unit&&Math.abs(number-Number(q.answer.toFixed(2)))<=.01+1e-10)return {kind:'bad',text:'Not quite. Check your units. The diagram uses '+q.unit+'.'};
+  return {kind:'bad',text:q.type.startsWith('sine')?'Not quite. Match each known side and unknown side with their opposite angles, then substitute directly into the sine rule.':'Not quite. Use the cosine rule with the two known sides and their included angle. Check the subtraction term, then take the square root.'};
+}
+function solutionSteps(q){
+  const [a,b,c]=q.sides,[A,B,C]=q.angles,steps=[];
+  if(q.type==='sine-ssa-angle'){
+    steps.push(['Choose the sine rule','Side a is opposite the known angle A. Here a is longer than b, so there is only one valid triangle.',`\\frac{\\sin B}{b}=\\frac{\\sin A}{a}`]);
+    steps.push(['Substitute','',`\\frac{\\sin B}{${b}}=\\frac{\\sin ${A}^{\\circ}}{${a}}`]);
+    steps.push(['Rearrange',`Multiply both sides by ${b}.`,`\\sin B=\\frac{${b}\\sin ${A}^{\\circ}}{${a}}`]);
+    steps.push(['Find angle B','Use inverse sine in degree mode, then round to two decimal places.',`B=\\sin^{-1}\\left(\\frac{${b}\\sin ${A}^{\\circ}}{${a}}\\right)\\approx ${B.toFixed(2)}^{\\circ}`]);
+
+  }else if(q.type==='sine-side'){
+    steps.push(['Choose the sine rule','Side a is opposite A; side b is opposite B.',`\\frac{a}{\\sin A}=\\frac{b}{\\sin B}`]);
+    steps.push(['Substitute','',`\\frac{x}{\\sin ${A}^{\\circ}}=\\frac{${b}}{\\sin ${B}^{\\circ}}`]);
+    steps.push(['Rearrange',`Multiply by sin ${A}°.`,`x=\\frac{${b}\\sin ${A}^{\\circ}}{\\sin ${B}^{\\circ}}`]);
+  }else if(q.kind==='side'){
+    steps.push(['Choose the cosine rule','The unknown side a is opposite the included angle A.','a^2=b^2+c^2-2bc\\cos A']);
+    steps.push(['Substitute','',`x^2=${b}^2+${c}^2-2\\times ${b}\\times ${c}\\times\\cos ${A}^{\\circ}`]);
+    steps.push(['Evaluate the squares','',`x^2=${b*b}+${c*c}-${2*b*c}\\cos ${A}^{\\circ}`]);
+    steps.push(['Take the square root','Keep full calculator precision until the final answer.',`x=\\sqrt{${b*b+c*c}-${2*b*c}\\cos ${A}^{\\circ}}`]);
+  }else{
+    steps.push(['Choose the cosine rule','Side a is opposite the unknown angle A.','a^2=b^2+c^2-2bc\\cos A']);
+    steps.push(['Rearrange for the angle','',`\\cos A=\\frac{b^2+c^2-a^2}{2bc}`]);
+    steps.push(['Substitute','',`\\cos\\theta=\\frac{${b}^2+${c}^2-${a}^2}{2\\times ${b}\\times ${c}}`]);
+    steps.push(['Evaluate the squares','',`\\cos\\theta=\\frac{${b*b+c*c-a*a}}{${2*b*c}}`]);
+    steps.push(['Use inverse cosine','This gives the unique interior angle; use degree mode.',`\\theta=\\cos^{-1}\\left(\\frac{${b*b+c*c-a*a}}{${2*b*c}}\\right)`]);
+  }
+  steps.push(['Calculate and round','Use degree mode. Round only the final answer to two decimal places.',q.kind==='angle'?`\\theta\\approx ${q.answer.toFixed(2)}^{\\circ}`:`x\\approx ${q.answer.toFixed(2)}`]);return steps.map(([heading,explanation,latex])=>[
+    heading,explanation.replace(', marked x,',','),
+    latex.replace(/\bx\b/g,names[q.targetSide]).replace(/\\theta/g,' '+vertices[q.targetAngle])
+  ]);
+}
+const $=id=>document.getElementById(id);
+function renderMath(target,latex){if(window.katex)window.katex.render(latex,target,{throwOnError:false,output:'htmlAndMathml'});else target.textContent=latex;}
+let current;
+function newQuestion(){
+  current=generateQuestion();$('diagram').innerHTML=diagramMarkup(current);
+  $('prompt').textContent=current.kind==='angle'?'Find angle '+vertices[current.targetAngle]+'. Round to two decimal places and give your answer in degrees.':'Find side '+names[current.targetSide]+'. Round to two decimal places and include units in your answer.';
+  $('hint').textContent=current.kind==='angle'?'Use degree mode. Include degrees with your answer, for example 20 degrees.':'Use degree mode. Include mm, cm, m or km.';
+  $('answer').placeholder=current.kind==='angle'?'For example: 20 degrees':'For example: 5.25 cm';$('answer').value='';$('feedback').textContent='';$('feedback').className='feedback';$('solution').hidden=true;$('solution').textContent='';$('show-solution').setAttribute('aria-expanded','false');
+}
+function showSolution(){
+  const target=$('solution');target.textContent='';for(const [heading,explanation,latex] of solutionSteps(current)){
+    const row=document.createElement('div');row.className='working-step';const title=document.createElement('strong');title.textContent=heading;row.appendChild(title);
+    if(explanation){
+      const p=document.createElement('p'),match=explanation.match(/sin (\d+)°/);
+      if(match){
+        p.appendChild(document.createTextNode(explanation.slice(0,match.index)));
+        const maths=document.createElement('span');renderMath(maths,'\\sin '+match[1]+'^{\\circ}');p.appendChild(maths);
+        p.appendChild(document.createTextNode(explanation.slice(match.index+match[0].length)));
+      }else p.textContent=explanation;
+      row.appendChild(p);
+    }const maths=document.createElement('div');maths.className='solution-answer';renderMath(maths,latex);row.appendChild(maths);target.appendChild(row);
+  }
+  const label=document.createElement('strong');label.className='final-label';label.textContent='Final answer:\u00a0\u00a0\u00a0';target.appendChild(label);
+  const result=document.createElement('div');result.className='solution-answer';renderMath(result,current.kind==='angle'?`${vertices[current.targetAngle]}\\approx ${current.answer.toFixed(2)}^{\\circ}`:`${names[current.targetSide]}\\approx ${current.answer.toFixed(2)}\\,\\mathrm{${current.unit}}`);target.appendChild(result);target.hidden=false;$('show-solution').setAttribute('aria-expanded','true');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!window.katex){$('render-status').hidden=false;$('render-status').textContent='Connect to the internet and reload for maths formatting.';}
+  $('form').addEventListener('submit',event=>{event.preventDefault();const v=assessAnswer(current,$('answer').value);$('feedback').textContent=v.text;$('feedback').className='feedback '+v.kind;});
+  $('next').addEventListener('click',()=>{newQuestion();$('answer').focus();});$('show-solution').addEventListener('click',showSolution);newQuestion();
+});
+
+</script></body></html>

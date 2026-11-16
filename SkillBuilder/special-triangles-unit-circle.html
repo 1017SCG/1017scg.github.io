@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Special Triangles and Unit Circle | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}main{max-width:700px;margin:auto;padding:28px 24px}.prompt{margin:0 0 16px;color:#58645f;font-size:15px}.math{font-size:30px;overflow-x:auto;padding:12px 0 24px;min-height:80px}math{font-size:1em}form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}input,button{font:inherit;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}input{width:270px;max-width:100%;min-width:0}button{cursor:pointer;background:#f5f7f5;color:#263a30}button[type=submit]{background:#285b45;color:white;border-color:#285b45}button:hover{filter:brightness(.95)}:focus-visible{outline:3px solid #b87f20;outline-offset:2px}.hint{font-size:13px;color:#58645f;margin-top:12px}.feedback{font-size:15px;margin-top:18px;min-height:48px}.good{color:#20623e}.bad{color:#a23e26}.close{color:#875c0b}@media(max-width:480px){main{padding:22px 16px}input{width:100%}button{font-size:14px}.math{font-size:26px}}
+.answer-row{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:18px;align-items:center;width:100%}.preview{min-height:48px;overflow-x:auto;padding:8px 0;font-size:23px}.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}.preview-label{font:12px/1.5 system-ui,sans-serif;color:#68736d;display:block}.answer-row input{width:100%}@media(max-width:480px){.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.preview{font-size:19px}}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}.solution[hidden]{display:none}.solution-answer{font-size:24px;overflow-x:auto;margin-bottom:10px}.solution p{margin:0;font-size:15px}
+.step{margin:18px 0}.step p{margin:0 0 6px;font-size:14px}.step-maths{font-size:23px;overflow-x:auto;overflow-y:hidden;padding:12px 0;line-height:normal}.step-maths .katex{display:inline-block;vertical-align:middle}.rule{font-size:14px;margin-bottom:16px!important}.final-label{display:block;margin-top:20px}#answer{width:200px}
+h1{font-size:24px;font-weight:650;margin:0 0 20px}.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+
+/* Shared Skill Builder presentation, kept inline so each activity remains standalone. */
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+h2{font-size:19px;font-weight:650;margin:0 0 12px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{width:270px;max-width:100%;padding:9px 12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+button[type=submit]{background:#285b45;border-color:#285b45;color:#fff}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+.rule-heading,.final-heading,.step-heading,.final-label{display:block;font-size:15px;font-weight:700;margin:16px 0 8px}
+.rule-heading:first-child,.step-heading:first-child{margin-top:0}
+.solution-answer,.step-maths{padding:10px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.solution-answer .katex,.step-maths .katex,.preview .katex{display:inline-block;vertical-align:middle}
+.preview{min-height:56px;padding:12px 0;font-size:23px;line-height:normal;overflow-x:auto;overflow-y:hidden}
+.preview.empty{font:13px/1.5 system-ui,sans-serif;color:#68736d}
+.preview-label{display:block;font-size:12px;color:#68736d}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}.preview{font-size:19px}.answer-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.answer-row input{width:100%}}
+.answer-row{gap:10px}.answer-row #answer{width:100%}
+.circle-diagram svg{display:block;width:min(100%,230px);height:auto}
+.circle-key{display:flex;flex-wrap:wrap;gap:8px 20px;margin:8px 0;font-size:.95rem}
+.circle-key .given-angle{color:#24558c}
+.circle-key .reference-angle{color:#b32632}
+</style>
+</head>
+<body><main>
+<a class="back-link" href="index.html">← Skill Builder</a>
+<h1>Special Triangles and Unit Circle</h1>
+<p class="prompt">Find the exact value using the special triangles and unit circle.</p>
+<div id="question" class="math"></div>
+<form id="form"><div class="answer-row"><input id="answer" aria-label="Exact answer" aria-describedby="hint feedback" autocomplete="off" spellcheck="false" placeholder="For example: sqrt(3)/2"><div><span class="preview-label">Preview</span><div id="preview" class="preview empty">Your formatted answer</div></div></div><div class="actions"><button type="submit">Check Answer</button><button type="button" id="next">New Question</button><button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button></div></form>
+<p class="hint" id="hint">Use sqrt for square roots, for example sqrt(3)/2.</p>
+<div id="feedback" class="feedback" role="status"></div>
+<div id="solution" class="solution" hidden></div>
+</main><script>
+'use strict';
+const $=id=>document.getElementById(id);
+const negativeFunctions={2:['cos','tan'],3:['sin','cos'],4:['sin','tan']};
+const ratios={sin:['opposite','hypotenuse'],cos:['adjacent','hypotenuse'],tan:['opposite','adjacent']};
+const values={
+  30:{sin:['1/2',1,4],cos:['sqrt(3)/2',3,4],tan:['1/sqrt(3)',1,3]},
+  45:{sin:['1/sqrt(2)',1,2],cos:['1/sqrt(2)',1,2],tan:['1',1,1]},
+  60:{sin:['sqrt(3)/2',3,4],cos:['1/2',1,4],tan:['sqrt(3)',3,1]}
+};
+let bag=[],current;
+function generateQuestion(){
+  if(!bag.length){
+    bag=Object.keys(ratios).flatMap(fn=>[30,45,60].flatMap(angle=>[2,3,4].flatMap(quadrant=>[false,true].map(radians=>({fn,angle,quadrant,radians})))));
+    for(let i=bag.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]];}
+    const next=bag.at(-1);
+    if(current&&next.fn===current.fn&&next.angle===current.angle&&next.radians===current.radians&&next.quadrant===current.quadrant){
+      [bag[0],bag[bag.length-1]]=[bag[bag.length-1],bag[0]];
+    }
+  }
+  return bag.pop();
+}
+// Track the square of each positive factor as an exact fraction.
+function allowsHalfDecimal(q){return values[q.angle][q.fn][0]==='1/2';}
+function parse(text,allowHalfDecimal=false){
+  const source=text.trim().replace(/\s/g,'').replace(/√(\d+)/g,'sqrt($1)').replace(/√/g,'sqrt');
+  if(!source||source.length>100)throw Error('Enter an exact value, such as sqrt(3)/2.');
+  if(allowHalfDecimal&&source==='0.5')return {n:1n,d:4n,tex:'0.5'};
+  if(source.includes('.'))throw Error('An exact value is required. Use fractions and square roots instead of decimals.');
+  const tokens=source.match(/sqrt|\d+|[()*/]/g)||[];let i=0;
+  if(tokens.join('')!==source)throw Error('Use numbers, fractions and sqrt for square roots.');
+  function atom(){
+    const t=tokens[i++];
+    if(/^\d+$/.test(t||'')){const n=BigInt(t);return {n:n*n,d:1n,tex:t};}
+    if(t==='sqrt'||t==='('){
+      if(t==='sqrt'&&tokens[i++]!=='(')throw Error('Put the number inside brackets, for example sqrt(3).');
+      const a=product();
+      if(tokens[i++]!==')')throw Error('Check your brackets.');
+      if(t==='(')return a;
+      // Recover the rational radicand from its squared value.
+      const root=n=>{let r=n; if(n>1n){let next=(r+1n)/2n;while(next<r){r=next;next=(r+n/r)/2n;}}return r;};
+      const n=root(a.n),d=root(a.d);
+      if(n*n!==a.n||d*d!==a.d)throw Error('Use a whole number or fraction inside sqrt.');
+      return {n,d,tex:'\\sqrt{'+a.tex+'}'};
+    }
+    throw Error('Check that your expression is complete.');
+  }
+  function product(){
+    let a=atom();
+    while(i<tokens.length&&tokens[i]!==')'){
+      const op=tokens[i];
+      if(op==='*'||op==='/')i++;
+      else if(op!=='sqrt'&&op!=='(')throw Error('Check your expression.');
+      const b=atom();
+      if(op==='/'){
+        if(!b.n)throw Error('The denominator cannot be zero.');
+        a={n:a.n*b.d,d:a.d*b.n,tex:'\\frac{'+a.tex+'}{'+b.tex+'}'};
+      }else a={n:a.n*b.n,d:a.d*b.d,tex:a.tex+(op==='*'?'\\times ':'')+b.tex};
+    }
+    return a;
+  }
+  const result=product();if(i!==tokens.length)throw Error('Check your brackets.');return result;
+}
+function parseSigned(text,allowHalfDecimal){
+  const input=text.trim().replace(/^−/,'-');
+  const negative=input.startsWith('-');
+  const result=parse(negative?input.slice(1):input,allowHalfDecimal);
+  return {...result,negative,tex:(negative?'-':'')+result.tex};
+}
+function assess(q,text){
+  try{
+    const a=parseSigned(text,allowsHalfDecimal(q)),[,n,d]=values[q.angle][q.fn];
+    if(a.n*BigInt(d)!==a.d*BigInt(n)){
+      return ['bad','Not quite. Check the reference angle, then use the ratio for '+q.fn+'.'];
+    }
+    if(a.negative!==negativeFunctions[q.quadrant].includes(q.fn)){
+      return ['bad','The magnitude is correct. Check the sign of '+q.fn+' in Quadrant '+q.quadrant+'.'];
+    }
+    // Compare the unreduced squared fraction without requiring rationalisation.
+    let numerator=a.n, denominator=a.d;
+    while(denominator!==0n)[numerator,denominator]=[denominator,numerator%denominator];
+    const rationalised = a.tex===parse('sqrt(2)/2').tex || a.tex===parse('sqrt(3)/3').tex;
+    if(numerator>1n&&!rationalised)return ['close','You’re close! Your answer is equivalent. Check whether your fraction can be simplified further.'];
+    return ['good','Correct!'];
+  }catch(e){return ['input',e.message];}
+}
+function render(target,latex,fallback=latex){if(window.katex)window.katex.render(latex,target,{throwOnError:false});else target.textContent=fallback;}
+function questionDegrees({angle,quadrant}){
+  return quadrant===2?180-angle:quadrant===3?180+angle:360-angle;
+}
+function angleLabel(degrees,radians){
+  if(!radians)return {tex:degrees+'^{\\circ}',text:degrees+'°'};
+  let n=degrees,d=180;
+  while(d!==0)[n,d]=[d,n%d];
+  const numerator=degrees/n===1?'':String(degrees/n);
+  const denominator=180/n;
+  return {tex:'\\frac{'+numerator+'\\pi}{'+denominator+'}',text:numerator+'π/'+denominator,denominator};
+}
+function questionLatex(q){
+  const angle=angleLabel(questionDegrees(q),q.radians);
+  return '\\'+q.fn+' '+(q.radians?'\\left('+angle.tex+'\\right)':angle.tex);
+}
+function updatePreview(){
+  const target=$('preview');target.className='preview';
+  try{const a=parseSigned($('answer').value,allowsHalfDecimal(current));render(target,a.tex,$('answer').value);}
+  catch{target.className='preview empty';target.textContent=$('answer').value.trim()?'Enter a complete exact expression.':'Your formatted answer';}
+}
+function newQuestion(){
+  current=generateQuestion();
+  const label=angleLabel(questionDegrees(current),current.radians);
+  render($('question'),questionLatex(current),current.fn+'('+label.text+')');
+  $('answer').value='';updatePreview();
+  $('feedback').textContent='';$('feedback').className='feedback';$('solution').hidden=true;$('show-solution').setAttribute('aria-expanded','false');
+}
+function unitCircleDiagram(q){
+  const degrees=questionDegrees(q);
+  const given=angleLabel(degrees,q.radians).text;
+  const reference=angleLabel(q.angle,q.radians).text;
+  const point=(radius,angle)=>{
+    const radians=angle*Math.PI/180;
+    return [105+radius*Math.cos(radians),105-radius*Math.sin(radians)]
+      .map(coordinate=>coordinate.toFixed(2)).join(' ');
+  };
+  const arc=(radius,start,end)=>
+    'M '+point(radius,start)+' A '+radius+' '+radius+' 0 '+(end-start>180?1:0)+' 0 '+point(radius,end);
+  const referenceStart=q.quadrant===3?180:degrees;
+  const referenceEnd=q.quadrant===3?degrees:q.quadrant===2?180:360;
+  return `<svg viewBox="0 0 210 210" role="img" aria-label="Unit circle showing angle ${given} in Quadrant ${q.quadrant} and reference angle ${reference}.">
+    <defs><marker id="angle-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#24558c"/></marker></defs>
+    <circle cx="105" cy="105" r="78" fill="none" stroke="#7b8991"/>
+    <path d="M12 105H198 M105 12V198" stroke="#7b8991"/>
+    <text x="194" y="98" font-size="12">x</text><text x="112" y="18" font-size="12">y</text>
+    <path d="M105 105L${point(78,degrees)}" stroke="#25312f" stroke-width="2"/>
+    <path d="${arc(54,0,degrees)}" fill="none" stroke="#24558c" stroke-width="2" marker-end="url(#angle-arrow)"/>
+    <path d="${arc(46,referenceStart,referenceEnd)}" fill="none" stroke="#b32632" stroke-width="3"/>
+  </svg>`;
+}
+function showSolution(){
+  const {fn,angle}=current,[top,bottom]=ratios[fn];
+  const sides=angle===45?{opposite:'1',adjacent:'1',hypotenuse:'sqrt(2)'}:angle===30?{opposite:'1',adjacent:'sqrt(3)',hypotenuse:'2'}:{opposite:'sqrt(3)',adjacent:'1',hypotenuse:'2'};
+  const target=$('solution');
+  target.innerHTML='<strong>Find the reference angle</strong><p class="quadrant"></p><div class="circle-diagram"></div><div class="circle-key"><span class="given-angle"></span><span class="reference-angle"></span></div><div class="step-maths"></div><strong>Use the special triangle</strong><div class="step-maths"></div><strong>Apply the quadrant sign</strong><p class="sign"></p><div class="step-maths"></div>';
+  const {quadrant,radians}=current;
+  const negative=negativeFunctions[quadrant].includes(fn);
+  const lines=target.querySelectorAll('.step-maths');
+  const given=angleLabel(questionDegrees(current),radians);
+  const reference=angleLabel(angle,radians);
+  const halfTurn=radians?'\\pi':'180^{\\circ}';
+  const fullTurn=radians?'2\\pi':'360^{\\circ}';
+  const difference=quadrant===2?halfTurn+'-'+given.tex:quadrant===3?given.tex+'-'+halfTurn:fullTurn+'-'+given.tex;
+  target.querySelector('.quadrant').textContent='The angle is in Quadrant '+quadrant+'.';
+  target.querySelector('.circle-diagram').innerHTML=unitCircleDiagram(current);
+  render(target.querySelector('.given-angle'),'\\text{Full angle (blue)}\\quad '+given.tex,'Full angle (blue) '+given.text);
+  render(target.querySelector('.reference-angle'),'\\text{Reference angle (red)}\\quad '+reference.tex,'Reference angle (red) '+reference.text);
+  let working=difference;
+  let plainWorking=reference.text;
+  if(radians){
+    const denominator=given.denominator;
+    const turnNumerator=denominator*(quadrant===4?2:1);
+    const turnFraction='\\frac{'+turnNumerator+'\\pi}{'+denominator+'}';
+    const subtract=turn=>quadrant===3?given.tex+'-'+turn:turn+'-'+given.tex;
+    working+='='+subtract(turnFraction);
+    const plainSubtract=turn=>quadrant===3?given.text+' - '+turn:turn+' - '+given.text;
+    plainWorking=plainSubtract(quadrant===4?'2π':'π')+' = '+plainSubtract(turnNumerator+'π/'+denominator)+' = '+reference.text;
+  }
+  render(lines[0],working+'='+reference.tex,plainWorking);
+  const answer=values[angle][fn][0];
+  const ratio='\\frac{'+parse(sides[top]).tex+'}{'+parse(sides[bottom]).tex+'}';
+  const magnitude=parse(answer).tex;
+  render(lines[1],'\\'+fn+'\\left('+reference.tex+'\\right)='+ratio+(ratio===magnitude?'':'='+magnitude),fn+'('+reference.text+') = '+answer);
+  target.querySelector('.sign').textContent=fn+' is '+(negative?'negative':'positive')+' in Quadrant '+quadrant+'.';
+  render(lines[2],questionLatex(current)+'='+(negative?'-':'')+magnitude,(negative?'-':'')+answer);
+  target.hidden=false;$('show-solution').setAttribute('aria-expanded','true');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  $('form').addEventListener('submit',e=>{e.preventDefault();const [kind,message]=assess(current,$('answer').value);$('feedback').className='feedback '+kind;$('feedback').textContent=message;});
+  $('answer').addEventListener('input',updatePreview);$('next').addEventListener('click',()=>{newQuestion();$('answer').focus();});$('show-solution').addEventListener('click',showSolution);newQuestion();
+});
+</script></body></html>

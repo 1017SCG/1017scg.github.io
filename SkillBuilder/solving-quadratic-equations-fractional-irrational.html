@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solving Quadratic Equations | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}
+.prompt{margin:0 0 16px;color:#58645f;font-size:15px}
+.terms{display:flex;align-items:center;gap:16px;padding:12px 0 24px;font-size:28px}
+button{cursor:pointer}
+button[type=submit]{background:#285b45;border-color:#285b45;color:white}
+button:hover{filter:brightness(.95)}
+.solution p{margin:8px 0 0;padding:5px 0;line-height:1.8;overflow-x:auto;overflow-y:hidden}
+.solution h2{font-size:15px;margin:16px 0 8px}
+.final-heading{display:block;font-size:15px;margin:16px 0 8px}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}}
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+</style>
+<style>
+.answer-row{display:grid;grid-template-columns:repeat(2,minmax(0,270px));gap:12px}
+input{font:inherit;width:270px;max-width:100%;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}
+</style>
+</head>
+<body>
+<main>
+  <a class="back-link" href="index.html">← Skill Builder</a>
+  <h1>Solving Quadratic Equations</h1>
+  <p class="prompt" id="prompt">Find both values of x.</p>
+  <div id="question" class="terms"></div>
+  <form id="form">
+    <div class="answer-row">
+      <input id="answer" aria-label="First solution" autocomplete="off" placeholder="First solution">
+      <input id="second" aria-label="Second solution" autocomplete="off" placeholder="Second solution">
+    </div>
+    <div class="actions">
+      <button type="submit">Check Answer</button>
+      <button type="button" id="next">New Question</button>
+      <button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button>
+    </div>
+  </form>
+  <div id="feedback" class="feedback" role="status"></div>
+  <div id="solution" class="solution" hidden></div>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const choose = items => items[Math.floor(Math.random() * items.length)];
+let current;
+
+function gcd(a,b) {
+  while (b) [a,b] = [b,a % b];
+  return a < 0 ? -a : a;
+}
+
+const questionPools = {integer: [], fractional: [], irrational: []};
+for (let a = 1; a <= 5; a++) {
+  for (let b = -9; b <= 9; b++) {
+    for (let c = -9; c <= 9; c++) {
+      if (gcd(gcd(a,b),c) !== 1) continue;
+      const radicand = b*b-4*a*c;
+      if (radicand <= 0) continue;
+      const squareRoot = Math.sqrt(radicand);
+      if (!Number.isInteger(squareRoot)) questionPools.irrational.push({a,b,c,radicand,squareRoot});
+      else if ([-b+squareRoot,-b-squareRoot].some(n => n % (2*a) !== 0)) {
+        questionPools.fractional.push({a,b,c,radicand,squareRoot});
+      } else questionPools.integer.push({a,b,c,radicand,squareRoot});
+    }
+  }
+}
+
+function generateQuestion(type) {
+  const {a,b,c,radicand,squareRoot} = choose(questionPools[type]);
+  const roots = [squareRoot,-squareRoot].map(signedRoot => {
+    const numerator = -b+signedRoot;
+    const denominator = 2*a;
+    if (type === 'irrational') return numerator/denominator;
+    const divisor = gcd(numerator,denominator);
+    return [numerator/divisor,denominator/divisor];
+  });
+  const expression = (a === 1 ? '' : a) + 'x^2' +
+    (b ? (b < 0 ? '-' : '+') + (Math.abs(b) === 1 ? '' : Math.abs(b)) + 'x' : '') +
+    (c ? (c > 0 ? '+' : '') + c : '') + '=0';
+  return {type,a,b,c,radicand,squareRoot,roots,expression};
+}
+
+function fraction(numerator,denominator) {
+  if (denominator === 1 || denominator === 1n) return String(numerator);
+  const negative = numerator < 0;
+  const magnitude = negative ? -numerator : numerator;
+  return (negative ? '-' : '')+'\\frac{'+magnitude+'}{'+denominator+'}';
+}
+
+function render(target,latex,fallback = latex) {
+  if (window.katex) window.katex.render(latex,target,{throwOnError:false});
+  else target.textContent = fallback;
+}
+
+function parse(text) {
+  const input = text.trim().replace(/[−–]/g,'-').replace(/^x\s*=\s*/i,'');
+  if (input.length > 100) return null;
+  if (/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(input)) return input;
+  if (current.type === 'irrational') return null;
+  const match = input.match(/^([+-]?\d+)(?:\s*\/\s*([+-]?\d+))?$/);
+  if (!match || (match[2] && BigInt(match[2]) === 0n)) return null;
+  return [BigInt(match[1]),BigInt(match[2] ?? 1)];
+}
+
+function numericValue(value) {
+  return Array.isArray(value) ? Number(value[0])/Number(value[1]) : Number(value);
+}
+
+function roundToHundredths(value) {
+  const magnitude = Math.abs(value)*100;
+  return Math.sign(value)*Math.round(magnitude + Number.EPSILON*magnitude);
+}
+
+function assess(values,{type,roots}) {
+  if (values.some(value => value === null)) return ['input','Enter both solutions as numbers.'];
+  const comparable = type === 'integer' ? numericValue : value => roundToHundredths(numericValue(value));
+  const tolerance = type === 'integer' ? 0 : 1;
+  const expected = roots.map(comparable);
+  const [first,second] = values.map(value => {
+    const submitted = comparable(value);
+    return expected.map(root => Math.abs(root-submitted) <= tolerance);
+  });
+  if ((first[0] && second[1]) || (first[1] && second[0])) return ['good','Correct!'];
+  if (first.some(Boolean) && second.some(Boolean)) return ['bad','You found one solution. Use the other sign in the quadratic formula to find the second.'];
+  return ['bad','Not quite. Check your substitution into the quadratic formula, and calculate both solutions.'];
+}
+
+function newQuestion() {
+  const type = Math.random() < 0.10 ? 'integer' : choose(['fractional','irrational']);
+  let next = generateQuestion(type);
+  while (current?.expression === next.expression) next = generateQuestion(type);
+  current = next;
+  byId('prompt').textContent = current.type === 'integer' ? 'Find both values of x.'
+    : 'Find both values of x. Round each answer to two decimal places.';
+  render(byId('question'),current.expression);
+  for (const id of ['answer','second']) byId(id).value = '';
+  byId('feedback').textContent = '';
+  byId('solution').hidden = true;
+  byId('show-solution').setAttribute('aria-expanded','false');
+}
+
+function showSolution() {
+  const {type,a,b,c,radicand,squareRoot,roots} = current;
+  const target = byId('solution');
+  target.replaceChildren();
+  function step(title,latex,fallback) {
+    const heading = document.createElement('h2');
+    heading.textContent = title;
+    const line = document.createElement('p');
+    render(line,latex,fallback);
+    target.append(heading,line);
+  }
+  step('Identify the coefficients','a='+a+',\\quad b='+b+',\\quad c='+c,'a = '+a+', b = '+b+', c = '+c);
+  step('Use the quadratic formula','x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}','x = (-b ± sqrt(b^2 − 4ac))/(2a)');
+  step('Substitute the coefficients',
+    'x=\\frac{-('+b+')\\pm\\sqrt{('+b+')^2-4('+a+')('+c+')}}{2('+a+')}',
+    'x = (-('+b+') ± sqrt(('+b+')^2 − 4('+a+')('+c+')))/(2('+a+'))');
+  step('Simplify what is under the square root',
+    'x=\\frac{'+(-b)+'\\pm\\sqrt{'+radicand+'}}{'+2*a+'}',
+    'x = ('+(-b)+' ± sqrt('+radicand+'))/'+2*a);
+  if (type === 'irrational') {
+    const exact = [1,-1].map(sign => 'x=\\frac{'+(-b)+(sign === 1 ? '+' : '-')+'\\sqrt{'+radicand+'}}{'+2*a+'}');
+    const exactPlain = 'x = ('+(-b)+' ± sqrt('+radicand+'))/'+2*a;
+    step('Use both signs',exact.join('\\quad\\text{or}\\quad '),exactPlain);
+  } else {
+    step('Evaluate the square root',
+      'x=\\frac{'+(-b)+'\\pm'+squareRoot+'}{'+2*a+'}',
+      'x = ('+(-b)+' ± '+squareRoot+')/'+2*a);
+    const final = roots.map(([n,d]) => 'x='+fraction(n,d)).join('\\quad\\text{or}\\quad ');
+    const plain = roots.map(([n,d]) => 'x = '+(d === 1 ? n : n+'/'+d)).join(' or ');
+    step(type === 'integer' ? 'Final answers' : 'Find the exact solutions',final,plain);
+  }
+  if (type !== 'integer') {
+    const displayedRoots = roots.map(root => {
+      const decimal = (roundToHundredths(numericValue(root))/100).toFixed(2);
+      const exact = Array.isArray(root) && (root[0]*100) % root[1] === 0;
+      return {decimal, exact};
+    });
+    step('Final answers',displayedRoots.map(({decimal,exact}) => 'x'+(exact ? '=' : '\\approx ')+decimal).join('\\quad\\text{or}\\quad '),
+      displayedRoots.map(({decimal,exact}) => 'x '+(exact ? '=' : '≈')+' '+decimal).join(' or '));
+  }
+  target.hidden = false;
+  byId('show-solution').setAttribute('aria-expanded','true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const inputs = [byId('answer'),byId('second')];
+  const values = () => inputs.map(input => parse(input.value));
+  byId('form').addEventListener('submit',event => {
+    event.preventDefault();
+    const [kind,message] = assess(values(),current);
+    byId('feedback').className = 'feedback '+kind;
+    byId('feedback').textContent = message;
+  });
+  byId('next').addEventListener('click',() => { newQuestion(); inputs[0].focus(); });
+  byId('show-solution').addEventListener('click',showSolution);
+  newQuestion();
+});
+</script>
+</body>
+</html>

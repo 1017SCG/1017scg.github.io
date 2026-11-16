@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solving trigonometric equations (degrees) | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}
+.prompt{margin:0 0 16px;color:#58645f;font-size:15px}
+.terms{display:flex;align-items:center;gap:16px;padding:12px 0 24px;font-size:28px}
+button{cursor:pointer}
+button[type=submit]{background:#285b45;border-color:#285b45;color:white}
+button:hover{filter:brightness(.95)}
+.solution p{margin:8px 0 0;padding:5px 0;line-height:1.8;overflow-x:auto;overflow-y:hidden}
+.solution h2{font-size:15px;margin:16px 0 8px}
+.final-heading{display:block;font-size:15px;margin:16px 0 8px}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}}
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+</style>
+<style>
+.answer-row{display:grid;grid-template-columns:repeat(2,minmax(0,270px));gap:12px}
+input{font:inherit;width:270px;max-width:100%;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}
+</style>
+</head>
+<body>
+<main>
+  <a class="back-link" href="index.html">← Skill Builder</a>
+  <h1>Solving trigonometric equations (degrees)</h1>
+  <p class="prompt" id="prompt">Find all solutions for <span id="range"></span>.</p>
+  <div id="question" class="terms"></div>
+  <form id="form">
+    <div class="answer-row" id="answers"></div>
+    <div class="actions">
+      <button type="submit">Check Answer</button>
+      <button type="button" id="next">New Question</button>
+      <button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button>
+    </div>
+  </form>
+  <div id="feedback" class="feedback" role="status"></div>
+  <div id="solution" class="solution" hidden></div>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const half = '\\frac{1}{2}';
+const inverseRootTwo = '\\frac{1}{\\sqrt{2}}';
+const halfRootThree = '\\frac{\\sqrt{3}}{2}';
+const inverseRootThree = '\\frac{1}{\\sqrt{3}}';
+const sine = [
+  ['0', [0,180,360]], ['1', [90]], ['-1', [270]],
+  [half, [30,150]], ['-'+half, [210,330]],
+  [inverseRootTwo, [45,135]], ['-'+inverseRootTwo, [225,315]],
+  [halfRootThree, [60,120]], ['-'+halfRootThree, [240,300]]
+];
+const cosine = [
+  ['0', [90,270]], ['1', [0,360]], ['-1', [180]],
+  [half, [60,300]], ['-'+half, [120,240]],
+  [inverseRootTwo, [45,315]], ['-'+inverseRootTwo, [135,225]],
+  [halfRootThree, [30,330]], ['-'+halfRootThree, [150,210]]
+];
+const tangent = [
+  ['0', [0,180,360]], ['1', [45,225]], ['-1', [135,315]],
+  [inverseRootThree, [30,210]], ['-'+inverseRootThree, [150,330]],
+  ['\\sqrt{3}', [60,240]], ['-\\sqrt{3}', [120,300]]
+];
+const questions = Object.entries({sin:sine,cos:cosine,tan:tangent}).flatMap(([fn,rows]) =>
+  rows.map(([value,angles]) => ({fn,value,angles})));
+let current;
+let inputs = [];
+
+function render(target,latex,plain) {
+  if (window.katex) window.katex.render(latex,target,{throwOnError:false});
+  else target.textContent = plain;
+}
+
+function plainValue(value) {
+  return value.replace(/\\sqrt\{(\d+)\}/g,'√$1')
+    .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,'$1/$2');
+}
+
+function newQuestion() {
+  const available = questions.filter(question => question !== current);
+  current = available[Math.floor(Math.random()*available.length)];
+  const {fn,value,angles} = current;
+  render(byId('question'),'\\'+fn+'(\\theta)='+value,fn+'(θ) = '+plainValue(value));
+  inputs = angles.map((_,index) => {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.inputMode = 'numeric';
+    input.autocomplete = 'off';
+    input.placeholder = angles.length === 1 ? 'Angle in degrees' : 'Angle '+(index+1)+' in degrees';
+    input.setAttribute('aria-label',input.placeholder);
+    return input;
+  });
+  byId('answers').replaceChildren(...inputs);
+  byId('feedback').textContent = '';
+  byId('solution').hidden = true;
+  byId('show-solution').setAttribute('aria-expanded','false');
+}
+
+function assess(entries,angles) {
+  const values = entries.map(entry => entry.trim().match(/^([+-]?\d+)\s*(?:°|degrees)?$/i));
+  if (values.some(value => !value)) return ['input','Enter a whole number of degrees in each box.'];
+  const submitted = values.map(value => Number(value[1]));
+  if (submitted.some(angle => !angles.includes(angle))) {
+    return ['bad','Not quite. Check where the given value occurs on the unit circle.'];
+  }
+  if (new Set(submitted).size !== angles.length) return ['bad','Enter each solution only once.'];
+  return ['good','Correct!'];
+}
+
+function unitCircleDiagram(angles,reference) {
+  const point = angle => {
+    const radians = angle*Math.PI/180;
+    return [Math.cos(radians),-Math.sin(radians)];
+  };
+  const marks = [...new Set(angles.map(angle => angle % 360))].map(angle => {
+    const [x,y] = point(angle);
+    const label = angle === 0 && angles.includes(360) ? '0°, 360°' : angle+'°';
+    let arc = '';
+    if (reference > 0 && reference < 90) {
+      const axis = Math.round(angle/180)*180;
+      const start = point(Math.min(angle,axis)).map(value => 36*value).join(' ');
+      const end = point(Math.max(angle,axis)).map(value => 36*value).join(' ');
+      arc = '<path d="M '+start+' A 36 36 0 0 0 '+end+'" fill="none" stroke="#b32632" stroke-width="2"/>';
+    }
+    return '<line x2="'+77*x+'" y2="'+77*y+'" stroke="#24558c" stroke-width="2"/>'+
+      '<circle cx="'+77*x+'" cy="'+77*y+'" r="3" fill="#24558c"/>'+arc+
+      '<text x="'+103*x+'" y="'+103*y+'" text-anchor="middle" dominant-baseline="central" fill="#24558c">'+label+'</text>';
+  }).join('');
+  const diagram = document.createElement('div');
+  diagram.innerHTML = '<svg width="280" style="display:block;max-width:100%;margin:12px 0" viewBox="-140 -120 280 240" role="img" aria-label="Unit circle showing solution angles '+angles.join(', ')+' degrees">'+
+    '<circle r="77" fill="none" stroke="#7b8991"/><path d="M-86 0H86 M0-86V86" stroke="#7b8991"/>'+
+    '<text x="87" y="-8" font-size="12">x</text><text x="8" y="-84" font-size="12">y</text>'+
+    marks+'</svg>';
+  return diagram;
+}
+
+function showSolution() {
+  const {fn,value,angles} = current;
+  const target = byId('solution');
+  const heading = document.createElement('strong');
+  heading.textContent = 'Use the unit circle';
+  const explanation = document.createElement('p');
+  const coordinate = {sin:'the y-coordinate',cos:'the x-coordinate',tan:'the y-coordinate divided by the x-coordinate'}[fn];
+  const exactValue = document.createElement('span');
+  render(exactValue,value,plainValue(value));
+  explanation.append('Find the angles where '+coordinate+' equals ',exactValue,'.');
+  const detail = document.createElement('p');
+  const [first] = angles;
+  const halfTurnAngle = first % 180;
+  const reference = Math.min(halfTurnAngle,180-halfTurnAngle);
+  const special = reference > 0 && reference < 90;
+  const negative = value.startsWith('-');
+  const introduction = [];
+  if (special || negative) {
+    const positiveValue = negative ? value.slice(1) : value;
+    const startingAngle = special ? reference : questions.find(q => q.fn === fn && q.value === positiveValue).angles[0];
+    const startHeading = document.createElement('strong');
+    startHeading.textContent = special
+      ? (negative ? 'Solve the positive case using the special triangles' : 'Start with the special triangles')
+      : 'Start with the positive case on the axes';
+    const start = document.createElement('p');
+    render(start,'\\'+fn+'('+startingAngle+'^{\\circ})='+positiveValue,
+      fn+'('+startingAngle+'°) = '+plainValue(positiveValue));
+    introduction.push(startHeading,start);
+    heading.className = 'final-heading';
+  }
+  if (negative) heading.textContent = 'Find where the function has the negative value';
+  if (reference === 0 || reference === 90) {
+    detail.textContent = 'Check the points on the axes, including both 0° and 360°. '+(fn === 'tan' ? 'Tangent is undefined where the x-coordinate is zero.' : '');
+  } else {
+    const quadrantNames = ['first','second','third','fourth'];
+    const quadrants = angles.map(angle => quadrantNames[Math.floor(angle/90)]);
+    detail.textContent = 'The red arcs show the '+reference+'° reference angle. '+fn+' is '+(negative ? 'negative' : 'positive')+
+      ' in the '+quadrants.join(' and ')+' quadrants.';
+  }
+  const finalHeading = document.createElement('strong');
+  finalHeading.className = 'final-heading';
+  finalHeading.textContent = angles.length === 1 ? 'Final answer' : 'Final answers';
+  const answer = document.createElement('p');
+  render(answer,'\\theta='+angles.map(angle => angle+'^{\\circ}').join(',\\quad '),
+    'θ = '+angles.map(angle => angle+'°').join(', '));
+  target.replaceChildren(...introduction,heading,explanation,detail,unitCircleDiagram(angles,reference),finalHeading,answer);
+  target.hidden = false;
+  byId('show-solution').setAttribute('aria-expanded','true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  render(byId('range'),'0^{\\circ}\\leq\\theta\\leq360^{\\circ}','0° ≤ θ ≤ 360°');
+  byId('form').addEventListener('submit',event => {
+    event.preventDefault();
+    const [kind,message] = assess(inputs.map(input => input.value),current.angles);
+    byId('feedback').className = 'feedback '+kind;
+    byId('feedback').textContent = message;
+  });
+  byId('next').addEventListener('click',() => { newQuestion(); inputs[0].focus(); });
+  byId('show-solution').addEventListener('click',showSolution);
+  newQuestion();
+});
+</script>
+</body>
+</html>

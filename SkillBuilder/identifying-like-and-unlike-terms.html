@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Identifying Like and Unlike Terms | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}
+.prompt{margin:0 0 16px;color:#58645f;font-size:15px}
+.terms{display:flex;align-items:center;gap:16px;padding:12px 0 24px;font-size:28px}
+.join{font-size:15px;color:#58645f}
+button{cursor:pointer}
+button[data-choice]{background:#285b45;border-color:#285b45;color:white}
+button:hover{filter:brightness(.95)}
+.solution p{margin:8px 0 0}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}}
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back-link" href="index.html">← Skill Builder</a>
+  <h1>Identifying Like and Unlike Terms</h1>
+  <p class="prompt" id="prompt">Are these like terms or unlike terms?</p>
+  <div class="terms" role="group" aria-labelledby="prompt">
+    <span id="first-term"></span><span class="join">and</span><span id="second-term"></span>
+  </div>
+  <div class="actions">
+    <button type="button" data-choice="like">Like terms</button>
+    <button type="button" data-choice="unlike">Unlike terms</button>
+  </div>
+  <div class="actions">
+    <button type="button" id="next">New Question</button>
+    <button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button>
+  </div>
+  <div id="feedback" class="feedback" role="status"></div>
+  <div id="solution" class="solution" hidden>
+    <strong id="classification"></strong>
+    <p id="explanation"></p>
+  </div>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const examples = [
+  {parts: ['a', 'a'], like: true, reason: 'Both terms have the same variable raised to the same power. Their coefficients can differ.'},
+  {parts: ['a^2', 'a^2'], like: true, reason: 'Both terms have the same variable squared.'},
+  {parts: ['ab', 'ba'], like: true, reason: 'Both terms have the same variables raised to the same powers. The order of the variables does not matter.'},
+  {parts: ['', ''], like: true, reason: 'Both terms are constants, so they are like terms.'},
+  {parts: ['a', 'b'], like: false, reason: 'The terms have different variables.'},
+  {parts: ['a^2', 'a'], like: false, reason: 'The terms have the same variable, but its powers are different.'},
+  {parts: ['ab', 'a'], like: false, reason: 'One term has an extra variable.'},
+  {parts: ['a^2b', 'ab^2'], like: false, reason: 'The terms have the same variables, but the powers of the matching variables are different.'}
+];
+const choose = items => items[Math.floor(Math.random() * items.length)];
+const coefficients = [-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9];
+let current;
+
+function formatTerm(coefficient, part) {
+  if (part && Math.abs(coefficient) === 1) return (coefficient < 0 ? '-' : '') + part;
+  return coefficient + part;
+}
+
+function generateQuestion(previous) {
+  const example = choose(examples.filter(item => item !== previous));
+  const [a, b] = choose(['xy', 'mn', 'pq', 'ab', 'uv']);
+  const first = choose(coefficients);
+  const second = choose(coefficients.filter(value => value !== first));
+  const terms = example.parts.map((part, index) =>
+    formatTerm(index === 0 ? first : second, part.replace(/[ab]/g, letter => letter === 'a' ? a : b)));
+  if (Math.random() < 0.5) terms.reverse();
+  return {example, terms};
+}
+
+function renderTerm(target, term) {
+  if (window.katex) window.katex.render(term, target, {throwOnError: false});
+  else target.textContent = term;
+}
+
+function newQuestion() {
+  current = generateQuestion(current?.example);
+  renderTerm(byId('first-term'), current.terms[0]);
+  renderTerm(byId('second-term'), current.terms[1]);
+  byId('feedback').textContent = '';
+  byId('solution').hidden = true;
+  byId('show-solution').setAttribute('aria-expanded', 'false');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  for (const button of document.querySelectorAll('[data-choice]')) {
+    button.addEventListener('click', () => {
+      const correct = (button.dataset.choice === 'like') === current.example.like;
+      const feedback = byId('feedback');
+      feedback.className = correct ? 'feedback good' : 'feedback bad';
+      feedback.textContent = correct ? 'Correct!' : 'Not quite. Compare the variables and their powers.';
+    });
+  }
+  byId('next').addEventListener('click', newQuestion);
+  byId('show-solution').addEventListener('click', () => {
+    byId('classification').textContent = current.example.like ? 'Like terms' : 'Unlike terms';
+    byId('explanation').textContent = current.example.reason;
+    byId('solution').hidden = false;
+    byId('show-solution').setAttribute('aria-expanded', 'true');
+  });
+  newQuestion();
+});
+</script>
+</body>
+</html>

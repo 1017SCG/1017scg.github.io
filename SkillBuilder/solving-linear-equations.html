@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solving Linear Equations | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}
+.prompt{margin:0 0 16px;color:#58645f;font-size:15px}
+.terms{display:flex;align-items:center;gap:16px;padding:12px 0 24px;font-size:28px}
+button{cursor:pointer}
+button[type=submit]{background:#285b45;border-color:#285b45;color:white}
+button:hover{filter:brightness(.95)}
+.solution p{margin:8px 0 0}
+.final-heading{display:block;font-size:15px;margin:16px 0 8px}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}}
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+</style>
+<style>
+.answer-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+input{font:inherit;width:270px;max-width:100%;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}
+</style>
+</head>
+<body>
+<main>
+  <a class="back-link" href="index.html">← Skill Builder</a>
+  <h1>Solving Linear Equations</h1>
+  <p class="prompt" id="prompt">Solve for x.</p>
+  <div id="question" class="terms"></div>
+  <form id="form">
+    <div class="answer-row">
+      <input id="answer" aria-label="Your answer" autocomplete="off" placeholder="Your answer">
+    </div>
+    <div class="actions">
+      <button type="submit">Check Answer</button>
+      <button type="button" id="next">New Question</button>
+      <button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button>
+    </div>
+  </form>
+  <div id="feedback" class="feedback" role="status"></div>
+  <div id="solution" class="solution" hidden></div>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const choose = items => items[Math.floor(Math.random() * items.length)];
+const coefficients = [-6,-5,-4,-3,-2,-1,1,2,3,4,5,6];
+let current;
+
+function gcd(a,b) {
+  while (b) [a,b] = [b,a % b];
+  return a < 0 ? -a : a;
+}
+
+function side(coefficient, constant) {
+  if (!coefficient) return String(constant);
+  const variable = coefficient === 1 ? 'x' : coefficient === -1 ? '-x' : coefficient + 'x';
+  return variable + (constant > 0 ? '+' + constant : constant < 0 ? constant : '');
+}
+
+function generateQuestion() {
+  const a = choose(coefficients);
+  const b = choose(coefficients);
+  const c = Math.random() < 0.5 ? 0 : choose(coefficients.filter(value => value !== a));
+  const difference = a-c;
+  const whole = Math.floor(Math.random() * 13) - 6;
+  const remainder = Math.abs(difference) > 1 && Math.random() < 0.5
+    ? 1 + Math.floor(Math.random() * (Math.abs(difference)-1)) : 0;
+  const d = difference*whole+remainder+b;
+  const divisor = gcd(difference,d-b);
+  const numerator = (d-b)*Math.sign(difference)/divisor;
+  const denominator = Math.abs(difference)/divisor;
+  return {a,b,c,d,numerator,denominator,expression:side(a,b)+'='+side(c,d)};
+}
+
+function render(target, latex, fallback = latex) {
+  if (window.katex) window.katex.render(latex,target,{throwOnError:false});
+  else target.textContent = fallback;
+}
+
+function parseAnswer(text) {
+  const input = text.trim().replace(/[−–]/g,'-');
+  return input.length <= 100 && input.match(/^(x\s*=\s*)?([+-]?\d+)(?:\s*\/\s*([+-]?\d+))?$/i);
+}
+
+function assess(text, question) {
+  const match = parseAnswer(text);
+  if (!match || (match[3] && BigInt(match[3]) === 0n)) {
+    return ['input',question.denominator > 1 ? 'Enter your answer as a fraction, for example -3/4.' : 'Enter an integer, for example -3.'];
+  }
+  const numerator = BigInt(match[2]);
+  const denominator = BigInt(match[3] ?? 1);
+  if (numerator*BigInt(question.denominator) === denominator*BigInt(question.numerator)) {
+    if (match[3] && question.denominator === 1) return ['close','You’re close! Simplify your fraction to an integer.'];
+    if (gcd(numerator,denominator) !== 1n) return ['close','You’re close! Reduce your fraction to its simplest form.'];
+    return ['good','Correct!'];
+  }
+  return ['bad','Not quite. Substitute your answer into the original equation and check whether both sides are equal.'];
+}
+
+function newQuestion() {
+  let next = generateQuestion();
+  while (current && current.expression === next.expression) next = generateQuestion();
+  current = next;
+  byId('prompt').textContent = current.denominator > 1 ? 'Solve for x. Give your answer as a fraction.' : 'Solve for x.';
+  render(byId('question'),current.expression);
+  byId('answer').value = '';
+  byId('feedback').textContent = '';
+  byId('solution').hidden = true;
+  byId('show-solution').setAttribute('aria-expanded','false');
+}
+
+function showSolution() {
+  const {a,b,c,d,numerator,denominator} = current;
+  const answer = denominator === 1 ? String(numerator) : numerator+'/'+denominator;
+  const answerTex = denominator === 1 ? answer : (numerator < 0 ? '-' : '')+'\\frac{'+Math.abs(numerator)+'}{'+denominator+'}';
+  const target = byId('solution');
+  target.replaceChildren();
+  function step(instruction, latex, fallback) {
+    const heading = document.createElement('strong');
+    heading.className = 'final-heading';
+    heading.textContent = instruction;
+    const line = document.createElement('p');
+    render(line,latex,fallback);
+    target.append(heading,line);
+  }
+  const coefficient = a-c;
+  if (c) step((c > 0 ? 'Subtract ' : 'Add ') + side(Math.abs(c),0) + ' on both sides.',side(coefficient,b)+'='+d);
+  step((b > 0 ? 'Subtract ' : 'Add ') + Math.abs(b) + ' on both sides.',side(coefficient,0)+'='+(d-b));
+  if (coefficient !== 1) {
+    const quotient = '\\frac{'+(d-b)+'}{'+coefficient+'}';
+    step('Divide both sides by ' + coefficient + '.', 'x='+quotient+(quotient === answerTex ? '' : '='+answerTex),
+      'x = ('+(d-b)+')/('+coefficient+') = '+answer);
+  }
+  step('Final answer:', 'x='+answerTex, 'x='+answer);
+  target.hidden = false;
+  byId('show-solution').setAttribute('aria-expanded','true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  byId('form').addEventListener('submit',event => {
+    event.preventDefault();
+    const [kind,message] = assess(byId('answer').value,current);
+    byId('feedback').className = 'feedback ' + kind;
+    byId('feedback').textContent = message;
+  });
+  byId('next').addEventListener('click',() => { newQuestion(); byId('answer').focus(); });
+  byId('show-solution').addEventListener('click',showSolution);
+  newQuestion();
+});
+</script>
+</body>
+</html>

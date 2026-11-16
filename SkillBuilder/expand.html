@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Expand | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}
+.prompt{margin:0 0 16px;color:#58645f;font-size:15px}
+.terms{display:flex;align-items:center;gap:16px;padding:12px 0 24px;font-size:28px}
+.join{font-size:15px;color:#58645f}
+button{cursor:pointer}
+button[type=submit]{background:#285b45;border-color:#285b45;color:white}
+button:hover{filter:brightness(.95)}
+.solution p{margin:8px 0 0}
+.final-heading{display:block;font-size:15px;margin:16px 0 8px}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}}
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+</style>
+<style>
+.answer-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+input{font:inherit;width:270px;max-width:100%;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}
+.preview-label{display:block;font-size:12px;color:#68736d}
+</style>
+</head>
+<body>
+<main>
+  <a class="back-link" href="index.html">← Skill Builder</a>
+  <h1>Expand</h1>
+  <p class="prompt">Expand the brackets and simplify your answer.</p>
+  <div id="question" class="terms"></div>
+  <form id="form">
+    <div class="answer-row">
+      <input id="answer" aria-label="Your answer" aria-describedby="hint" autocomplete="off" placeholder="Your answer">
+      <div><span class="preview-label">Preview</span><span id="preview"></span></div>
+    </div>
+    <div class="actions">
+      <button type="submit">Check Answer</button>
+      <button type="button" id="next">New Question</button>
+      <button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button>
+    </div>
+  </form>
+  <p id="hint" class="prompt">Use ^ for powers (e.g. 3x^2-2y).</p>
+  <div id="feedback" class="feedback" role="status"></div>
+  <div id="solution" class="solution" hidden></div>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const choose = items => items[Math.floor(Math.random() * items.length)];
+const coefficients = [-6,-5,-4,-3,-2,-1,1,2,3,4,5,6];
+const constantFactors = coefficients.filter(value => Math.abs(value) > 1);
+let current;
+
+let previousType;
+
+function generateQuestion() {
+  const variable = choose(['x', 'y', 'a', 'm']);
+  const term = (part, choices = coefficients) => ({part, coefficient: BigInt(choose(choices))});
+  const bracket = () => [term(variable), term('')];
+  const single = previousType === undefined ? Math.random() < 0.5 : !previousType;
+  previousType = single;
+  const left = single ? [choose([term(variable), term('', constantFactors)])] : bracket();
+  const right = bracket();
+  const products = left.flatMap(a => right.map(b => ({
+    part: a.part && b.part ? variable + '^2' : a.part || b.part,
+    coefficient: a.coefficient * b.coefficient
+  })));
+  const expression = (single ? format(left) : '(' + format(left) + ')') + '(' + format(right) + ')';
+  return {left, right, products, expression};
+}
+
+function format(terms) {
+  return terms.map(({part, coefficient}, index) => {
+    const magnitude = coefficient < 0n ? -coefficient : coefficient;
+    const sign = coefficient < 0n ? '-' : index ? '+' : '';
+    return sign + (magnitude === 1n && part ? '' : magnitude) + part;
+  }).join('') || '0';
+}
+
+function combine(terms) {
+  const sums = new Map();
+  for (const {part, coefficient} of terms) sums.set(part, (sums.get(part) ?? 0n) + coefficient);
+  return [...sums].map(([part, coefficient]) => ({part, coefficient}));
+}
+
+function parse(text) {
+  const input = text.trim().replace(/[−–]/g, '-').replace(/\s*([+^-])\s*/g, '$1');
+  if (input.length > 100 || !/^[+-]?(?:\d+|\d*(?:[a-z](?:\^[1-9]\d*)?)+)(?:[+-](?:\d+|\d*(?:[a-z](?:\^[1-9]\d*)?)+))*$/.test(input)) return null;
+  return input.match(/[+-]?[^+-]+/g).map(term => {
+    const [, sign, digits, part] = term.match(/^([+-]?)(\d*)(.*)$/);
+    const powers = new Map();
+    for (const [, variable, exponent] of part.matchAll(/([a-z])(?:\^(\d+))?/g)) {
+      powers.set(variable, (powers.get(variable) ?? 0n) + BigInt(exponent ?? 1));
+    }
+    const canonical = [...powers.keys()].sort().map(variable => {
+      const power = powers.get(variable);
+      return variable + (power === 1n ? '' : '^' + power);
+    }).join('');
+    return {part: canonical, coefficient: BigInt((sign === '-' ? '-' : '') + (digits || '1')), simplifiedPart: (powers.size === (part.match(/[a-z]/g)||[]).length && !/\^1(?!\d)/.test(part))};
+  });
+}
+
+function render(target, expression) {
+  if (window.katex) window.katex.render(expression.replace(/\^(\d+)/g, '^{$1}'), target, {throwOnError:false});
+  else target.textContent = expression.replaceAll('\\times', '×');
+}
+
+function assess(terms, expected) {
+  if (!terms) return ['input', 'Enter your expanded answer without brackets. Use + or - between terms and ^ for powers.'];
+  const totals = terms => combine(terms).filter(term => term.coefficient !== 0n).sort((a,b) => a.part.localeCompare(b.part));
+  if (format(totals(terms)) !== format(totals(expected))) return ['bad', 'Not quite. Check that you have applied the distributive law correctly.'];
+  if (terms.length !== Math.max(1, totals(expected).length) || terms.some(term => !term.simplifiedPart || (term.coefficient === 0n && (terms.length > 1 || term.part)))) {
+    return ['close', 'You’re close! Your answer is equivalent. Check whether it can be simplified further.'];
+  }
+  return ['good', 'Correct!'];
+}
+
+function newQuestion() {
+  current = generateQuestion();
+  render(byId('question'), current.expression);
+  for (const id of ['preview','feedback']) byId(id).textContent = '';
+  byId('answer').value = '';
+  byId('solution').hidden = true;
+  byId('show-solution').setAttribute('aria-expanded', 'false');
+}
+
+function showSolution() {
+  const target = byId('solution');
+  const {left, right, products} = current;
+  const groups = combine(products);
+  target.replaceChildren();
+  const heading = document.createElement('strong');
+  heading.textContent = left.length === 1
+    ? 'Multiply the term outside the brackets by each term inside.'
+    : 'Multiply each term in the first bracket by each term in the second bracket.';
+  target.append(heading);
+  for (const [i, a] of left.entries()) {
+    for (const [j, b] of right.entries()) {
+      const line = document.createElement('p');
+      render(line, '(' + format([a]) + ') \\times (' + format([b]) + ') = ' + format([products[i * right.length + j]]));
+      target.append(line);
+    }
+  }
+  const expanded = document.createElement('p');
+  const answer = format(groups.filter(term => term.coefficient !== 0n));
+  render(expanded, format(products) + (groups.length < products.length ? ' = ' + answer : ''));
+  target.append(expanded);
+  const finalHeading = document.createElement('strong');
+  finalHeading.className = 'final-heading';
+  finalHeading.textContent = 'Final answer:';
+  const result = document.createElement('p');
+  render(result, answer);
+  target.append(finalHeading, result);
+  target.hidden = false;
+  byId('show-solution').setAttribute('aria-expanded', 'true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  byId('form').addEventListener('submit', event => {
+    event.preventDefault();
+    const [kind, message] = assess(parse(byId('answer').value), current.products);
+    byId('feedback').className = 'feedback ' + kind;
+    byId('feedback').textContent = message;
+  });
+  byId('answer').addEventListener('input', () => {
+    const input = byId('answer').value;
+    if (parse(input)) render(byId('preview'), input.replace(/[−–]/g, '-'));
+    else byId('preview').textContent = '';
+  });
+  byId('next').addEventListener('click', () => { newQuestion(); byId('answer').focus(); });
+  byId('show-solution').addEventListener('click', showSolution);
+  newQuestion();
+});
+</script>
+</body>
+</html>

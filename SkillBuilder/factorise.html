@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Factorise | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}
+.prompt{margin:0 0 16px;color:#58645f;font-size:15px}
+.terms{display:flex;align-items:center;gap:16px;padding:12px 0 24px;font-size:28px}
+.join{font-size:15px;color:#58645f}
+button{cursor:pointer}
+button[type=submit]{background:#285b45;border-color:#285b45;color:white}
+button:hover{filter:brightness(.95)}
+.solution p{margin:8px 0 0}
+.cross-grid{position:relative;display:grid;gap:28px;width:140px;margin:14px 0}
+.cross-row{display:flex;justify-content:space-between;align-items:center;min-height:32px;padding:2px 8px}
+.cross-blue{color:#24558c}
+.cross-red{color:#b32632}
+.cross-grid svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.final-heading{display:block;font-size:15px;margin:16px 0 8px}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}}
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+</style>
+<style>
+.answer-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+input{font:inherit;width:270px;max-width:100%;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}
+.preview-label{display:block;font-size:12px;color:#68736d}
+</style>
+</head>
+<body>
+<main>
+  <a class="back-link" href="index.html">← Skill Builder</a>
+  <h1>Factorise</h1>
+  <p class="prompt">Factorise the expression fully.</p>
+  <div id="question" class="terms"></div>
+  <form id="form">
+    <div class="answer-row">
+      <input id="answer" aria-label="Your answer" aria-describedby="hint" autocomplete="off" placeholder="Your answer">
+      <div><span class="preview-label">Preview</span><span id="preview"></span></div>
+    </div>
+    <div class="actions">
+      <button type="submit">Check Answer</button>
+      <button type="button" id="next">New Question</button>
+      <button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button>
+    </div>
+  </form>
+  <p id="hint" class="prompt">Use brackets for factors (e.g. (x+3)(x+2)).</p>
+  <div id="feedback" class="feedback" role="status"></div>
+  <div id="solution" class="solution" hidden></div>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const choose = items => items[Math.floor(Math.random() * items.length)];
+const offsets = [-5,-4,-3,-2,-1,1,2,3,4,5];
+const questionTypes = ['common', 'squares', 'cross', 'cross'];
+let current;
+
+function polynomial(coefficients) {
+  return coefficients.map((coefficient, degree) => ({coefficient, degree})).reverse()
+    .filter(term => term.coefficient !== 0)
+    .map(({coefficient, degree}, index) => {
+      const sign = coefficient < 0 ? '-' : index ? '+' : '';
+      const magnitude = Math.abs(coefficient);
+      const variable = degree > 1 ? 'x^' + degree : degree === 1 ? 'x' : '';
+      return sign + (magnitude === 1 && degree ? '' : magnitude) + variable;
+    }).join('') || '0';
+}
+
+function generateQuestion(type = choose(questionTypes)) {
+  const a = choose(offsets);
+  if (type === 'common') {
+    const factor = choose([2,3,4,5,6]);
+    const degree = choose([0,1,2,3,4]);
+    const coefficients = [...Array(degree).fill(0),factor*a,factor];
+    const outer = polynomial([...Array(degree).fill(0),factor]);
+    const inner = polynomial([a,1]);
+    return {type, coefficients, factors:[outer,inner], answer:outer+'('+inner+')',
+      explanation:'The highest common factor is ' + outer + '. Divide each term by ' + outer + ' to find what goes inside the brackets.'};
+  }
+
+  if (type === 'cross' && Math.random() < 0.5) {
+    const [m,n] = choose([[2,1],[3,1],[4,1],[2,2],[5,1],[6,1],[2,3]]);
+    const coprime = (value, coefficient) =>
+      ![2,3,5].some(prime => value % prime === 0 && coefficient % prime === 0);
+    const pairs = offsets.flatMap(p => offsets.filter(q => {
+      const constant = Math.abs(p*q);
+      const manageable = m*n === 6 ? [1,2,3,5].includes(constant) : constant <= 10;
+      return manageable && coprime(p,m) && coprime(q,n) && m*q+n*p !== 0;
+    }).map(q => [p,q]));
+    const [p,q] = choose(pairs);
+    const factors = [polynomial([p,m]), polynomial([q,n])];
+    return {type, coefficients:[p*q,m*q+n*p,m*n], factors,
+      answer:factors.map(factor => '('+factor+')').join(''),
+      crossRows:[[m,p],[n,q]]};
+  }
+
+  const b = type === 'squares' ? -a : choose(offsets.filter(value => value !== -a));
+  const factors = [polynomial([a,1]), polynomial([b,1])];
+  return {type, coefficients:[a*b,a+b,1], factors, answer:factors.map(factor => '('+factor+')').join(''),
+    crossRows:type === 'cross' ? [[1,a],[1,b]] : undefined};
+}
+
+function parse(text) {
+  const input = text.trim().replace(/[−–]/g, '-').replace(/\s*([()+^*-])\s*/g, '$1');
+  if (!input || input.length > 100 || input.includes('**')) return null;
+  const pieces = input.match(/\([^()]+\)(?:\^2)?|[^()]+/g);
+  if (!pieces || pieces.join('') !== input) return null;
+  const factors = [];
+  for (const [index, piece] of pieces.entries()) {
+    if (index > 0 && !piece.startsWith('(') && !piece.startsWith('*')) return null;
+    const token = piece.replace(/^\*/, '').replace(/\*$/, '');
+    if ((!index && piece.startsWith('*')) || (index === pieces.length-1 && piece.endsWith('*'))) return null;
+    if (!token && piece === '*') continue;
+    const bracket = token.match(/^\(([^()]+)\)(\^2)?$/);
+    const expression = bracket ? bracket[1] : token;
+    const terms = expression.match(/[+-]?(?:\d*x(?:\^[1-5])?|\d+)/g);
+    if (!terms || terms.join('') !== expression || terms.slice(1).some(term => !/^[+-]/.test(term))) return null;
+    const coefficients = Array(6).fill(0n);
+    const degrees = new Set();
+    let simplified = true;
+    for (const term of terms) {
+      const [,sign,digits,variable,exponent] = term.match(/^([+-]?)(\d*)(x(?:\^([1-5]))?)?$/);
+      const degree = variable ? Number(exponent ?? 1) : 0;
+      const coefficient = BigInt((sign === '-' ? '-' : '') + (digits || '1'));
+      simplified &&= !degrees.has(degree) && coefficient !== 0n;
+      degrees.add(degree);
+      coefficients[degree] += coefficient;
+    }
+    factors.push({coefficients, simplified});
+    if (bracket?.[2]) factors.push({coefficients, simplified});
+  }
+  return factors;
+}
+
+function assess(text, question) {
+  const factors = parse(text);
+  if (!factors) return ['input','Enter a factorised expression using brackets, for example (x+3)(x+2).'];
+  const expanded = factors.reduce((product, {coefficients}) => {
+    const result = Array(product.length+coefficients.length-1).fill(0n);
+    product.forEach((a,i) => coefficients.forEach((b,j) => { result[i+j] += a*b; }));
+    return result;
+  }, [1n]);
+  if (expanded.some((value,index) => value !== BigInt(question.coefficients[index] ?? 0)) ||
+      question.coefficients.slice(expanded.length).some(value => value !== 0)) {
+    return ['bad','Not quite. Try expanding your factors to check that they give the original expression.'];
+  }
+  const signature = coefficients => coefficients.map(value => coefficients.findLast(entry => entry !== 0n) < 0n ? -value : value).join(',');
+  const expected = question.factors.map(factor => signature(parse(factor)[0].coefficients)).sort().join(';');
+  const actual = factors.map(factor => signature(factor.coefficients)).sort().join(';');
+  if (actual !== expected || factors.some(factor => !factor.simplified)) {
+    return ['close','You’re close! Your answer is equivalent. Check whether it can be factorised further.'];
+  }
+  return ['good','Correct!'];
+}
+
+function render(target, expression) {
+  if (window.katex) window.katex.render(expression.replace(/\*/g, '\\cdot ').replace(/\^(\d+)/g, '^{$1}'), target, {throwOnError:false});
+  else target.textContent = expression;
+}
+
+function newQuestion() {
+  let next = generateQuestion();
+  while (current && polynomial(next.coefficients) === polynomial(current.coefficients)) next = generateQuestion(next.type);
+  current = next;
+  render(byId('question'), polynomial(current.coefficients));
+  for (const id of ['preview','feedback','answer']) {
+    if (id === 'answer') byId(id).value = '';
+    else byId(id).textContent = '';
+  }
+  byId('solution').hidden = true;
+  byId('show-solution').setAttribute('aria-expanded','false');
+}
+
+function showSolution() {
+  const target = byId('solution');
+  const heading = document.createElement('strong');
+  heading.textContent = {common:'Take out the common factor', squares:'Use the difference of two squares', cross:'Use the cross method'}[current.type];
+  const explanation = document.createElement('p');
+  explanation.textContent = current.explanation;
+  const finalHeading = document.createElement('strong');
+  finalHeading.className = 'final-heading';
+  finalHeading.textContent = 'Final answer:';
+  const result = document.createElement('p');
+  render(result,current.answer);
+  target.replaceChildren(heading);
+  if (current.type === 'squares') {
+    const rewrite = document.createElement('p');
+    const root = Math.sqrt(-current.coefficients[0]);
+    render(rewrite, polynomial(current.coefficients) + '=x^2-' + root + '^2');
+    target.append(rewrite);
+  }
+  if (current.explanation) target.append(explanation);
+  if (current.crossRows) {
+    const grid = document.createElement('div');
+    grid.className = 'cross-grid';
+    grid.innerHTML = '<svg viewBox="0 0 140 92" preserveAspectRatio="none" aria-hidden="true"><path class="cross-blue" d="M35 16L105 76" stroke="currentColor"/><path class="cross-red" d="M105 16L35 76" stroke="currentColor"/></svg>';
+    for (const [index, [coefficient, constant]] of current.crossRows.entries()) {
+      const row = document.createElement('div');
+      row.className = 'cross-row';
+      const left = document.createElement('span');
+      const right = document.createElement('span');
+      left.className = index === 0 ? 'cross-blue' : 'cross-red';
+      right.className = index === 0 ? 'cross-red' : 'cross-blue';
+      render(left, polynomial([0,coefficient]));
+      render(right, String(constant));
+      row.append(left,right);
+      grid.append(row);
+    }
+    const [[m,p],[n,q]] = current.crossRows;
+    const working = document.createElement('p');
+    const blueProduct = document.createElement('span');
+    blueProduct.className = 'cross-blue';
+    render(blueProduct, polynomial([0,m*q]));
+    const redProduct = document.createElement('span');
+    redProduct.className = 'cross-red';
+    render(redProduct, (n*p < 0 ? '-' : '+') + polynomial([0,Math.abs(n*p)]));
+    const sum = document.createElement('span');
+    render(sum, '=' + polynomial([0,m*q+n*p]));
+    working.append(blueProduct, ' ', redProduct, ' ', sum);
+    const label = document.createElement('p');
+    label.textContent = 'The cross products add to the middle term.';
+    target.append(grid, working, label);
+  }
+  target.append(finalHeading,result);
+  if (current.crossRows) {
+    const reminder = document.createElement('p');
+    reminder.textContent = 'Read the factors horizontally. Each row gives one bracket.';
+    target.append(reminder);
+  }
+  target.hidden = false;
+  byId('show-solution').setAttribute('aria-expanded','true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  byId('form').addEventListener('submit', event => {
+    event.preventDefault();
+    const [kind,message] = assess(byId('answer').value,current);
+    byId('feedback').className = 'feedback ' + kind;
+    byId('feedback').textContent = message;
+  });
+  byId('answer').addEventListener('input', () => {
+    const input = byId('answer').value.replace(/[−–]/g,'-');
+    if (parse(input)) render(byId('preview'),input);
+    else byId('preview').textContent = '';
+  });
+  byId('next').addEventListener('click', () => { newQuestion(); byId('answer').focus(); });
+  byId('show-solution').addEventListener('click',showSolution);
+  newQuestion();
+});
+</script>
+</body>
+</html>

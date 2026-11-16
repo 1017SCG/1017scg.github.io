@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exponential Growth and Decay | Skill Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:white;color:#25312f;font:16px/1.5 system-ui,sans-serif}
+button{cursor:pointer}
+button[type=submit]{background:#285b45;border-color:#285b45;color:white}
+button:hover{filter:brightness(.95)}
+.solution p{margin:8px 0 0;padding:5px 0;line-height:1.8;overflow-x:auto;overflow-y:hidden}
+.final-heading{display:block;font-size:15px;margin:16px 0 8px}
+@media(max-width:480px){main{padding:22px 16px}button{font-size:14px}}
+main{max-width:700px;margin:auto;padding:28px 24px}
+h1{font-size:24px;font-weight:650;line-height:1.3;margin:0 0 20px}
+.back-link{display:inline-block;margin:0 0 18px;color:#285b45;font-size:14px;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px}
+button{font:inherit;padding:9px 12px;border:1px solid #b7c0ba;border-radius:5px;background:#f5f7f5;color:#263a30}
+:focus-visible{outline:3px solid #b87f20;outline-offset:2px}
+.feedback{font-size:15px;min-height:24px;margin-top:16px}
+.feedback:not(:empty){padding:10px 12px;border-radius:5px;border-left:3px solid currentColor}
+.feedback.good{color:#20623e;background:#edf6ef}.feedback.bad{color:#a23e26;background:#fff3ee}
+.feedback.close{color:#875c0b;background:#fff8e7}.feedback.input{color:#405d79;background:#eef3f8}
+.solution{margin-top:18px;padding:16px;background:#f5f7f5;border-radius:5px}
+.solution[hidden]{display:none}
+</style>
+<style>
+.feedback:empty{display:none}
+h2{font-size:19px}
+input{font:inherit;width:270px;max-width:100%;border:1px solid #b7c0ba;border-radius:5px;padding:9px 12px}
+</style>
+</head>
+<body>
+<main>
+  <a class="back-link" href="index.html">← Skill Builder</a>
+  <h1>Exponential Growth and Decay</h1>
+  <h2 id="scenario-title"></h2>
+  <p><span id="scenario-intro"></span> <span id="model"></span> <span id="scenario-data"></span></p>
+  <form id="form">
+    <p><label for="rate">(a) Find <span id="rate-symbol">k</span>. Round to four decimal places.</label></p>
+    <input id="rate" type="text" inputmode="decimal" autocomplete="off" aria-describedby="rate-feedback">
+    <div id="rate-feedback" class="feedback" role="status"></div>
+    <p><label for="prediction" id="prediction-label"></label></p>
+    <input id="prediction" type="text" inputmode="decimal" autocomplete="off" aria-describedby="prediction-feedback">
+    <div id="prediction-feedback" class="feedback" role="status"></div>
+    <div class="actions">
+      <button type="submit">Check Answer</button>
+      <button type="button" id="next">New Question</button>
+      <button type="button" id="show-solution" aria-controls="solution" aria-expanded="false">Show Solution</button>
+    </div>
+  </form>
+  <div id="solution" class="solution" hidden></div>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const randomInt = (min,max) => min + Math.floor(Math.random()*(max-min+1));
+const scenarios = [
+  {name:'Fish population growth', subject:'The number of fish in a lake', quantity:'fish', time:'months',
+    start:200, increment:100, growth:true, predictTime:false, places:0},
+  {name:'Online video views', quantity:'views', time:'days',
+    start:2000, increment:1000, growth:true, predictTime:false, places:0},
+  {name:'Family store revenue', subject:'The family store’s weekly revenue', quantity:'dollars', time:'weeks',
+    start:5000, increment:1000, growth:false, predictTime:false, places:0},
+  {name:'Food colouring in a tank', quantity:'mg/L', time:'minutes',
+    start:30, increment:5, growth:false, predictTime:true, places:2}
+];
+const format = value => value.toLocaleString('en-AU');
+const monthFormat = new Intl.DateTimeFormat('en-AU', {month:'long', timeZone:'UTC'});
+const ordinal = new Intl.PluralRules('en-AU', {type:'ordinal'});
+function dateLabel(day,month) {
+  const suffix = {one:'st',two:'nd',few:'rd',other:'th'}[ordinal.select(day)];
+  return 'the '+day+suffix+' of '+month;
+}
+let current;
+
+function generateQuestion(previous) {
+  const options = scenarios.filter(scenario => scenario !== previous?.scenario);
+  const scenario = options[randomInt(0,options.length-1)];
+  const initial = scenario.start + scenario.increment*randomInt(0,5);
+  const observationTime = randomInt(2,6);
+  const percent = randomInt(15,35);
+  const direction = scenario.growth ? 1 : -1;
+  const observed = initial*(100 + direction*percent)/100;
+  const rate = Math.log(observed/initial)/observationTime;
+  const laterTime = observationTime + randomInt(2,5);
+  const target = initial*(100 + direction*(percent+randomInt(8,20)))/100;
+  const predict = k => scenario.predictTime ? Math.log(target/initial)/k : initial*Math.exp(k*laterTime);
+  const roundedRate = Number(rate.toFixed(4));
+  const prediction = predict(rate);
+  const roundedRatePrediction = predict(roundedRate);
+  let videoDates;
+  if (scenario.quantity === 'views') {
+    const monthIndex = randomInt(0,11);
+    const month = monthFormat.format(new Date(Date.UTC(2025,monthIndex,1)));
+    const daysInMonth = new Date(Date.UTC(2025,monthIndex+1,0)).getUTCDate();
+    const startDay = randomInt(1,daysInMonth-laterTime);
+    videoDates = {
+      start:dateLabel(startDay,month),
+      observed:dateLabel(startDay+observationTime,month),
+      prediction:dateLabel(startDay+laterTime,month)
+    };
+  }
+  return {scenario,initial,observationTime,observed,rate,roundedRate,laterTime,target,
+    prediction,roundedRatePrediction,videoDates};
+}
+
+function render(target,latex,plain) {
+  if (window.katex) window.katex.render(latex,target,{throwOnError:false});
+  else target.textContent = plain;
+}
+
+function newQuestion() {
+  current = generateQuestion(current);
+  const {scenario,initial,observed,observationTime,laterTime,target,videoDates} = current;
+  const {name,subject,quantity,time,predictTime} = scenario;
+  byId('scenario-title').textContent = name;
+  const store = name === 'Family store revenue';
+  const dye = quantity === 'mg/L';
+  const symbol = store ? 'R' : dye ? 'C' : 'N';
+  render(byId('model'),symbol+'='+symbol+'_0e^{kt}',symbol+' = '+symbol+'₀e^(kt)');
+  const fish = quantity === 'fish';
+  const video = Boolean(videoDates);
+  const model = 'can be modelled by';
+  byId('scenario-intro').textContent = video
+    ? 'On '+videoDates.start+', an online video had '+format(initial)+' views. On '+videoDates.observed+', it had '+format(observed)+' views. The total number of views can be modelled by'
+    : store
+    ? "A small family store has been quite profitable in the past. However, a new discount store has opened directly across the street. Since the opening of the new discount store, the family store's revenue has been declining. The family store's weekly revenue can be modelled using an exponential decay model of the form"
+    : dye ? 'Clear water flows into a tank containing food colouring. The well-mixed water drains at the same rate. The dye concentration in the tank '+model
+      : subject+(scenario.growth ? ' grows' : ' decays')+' exponentially and '+model;
+  const description = video
+    ? 'where $t$ is the number of days since '+videoDates.start+', $N$ is the total number of views after $t$ days, and $N_0$ is the number of views on '+videoDates.start+'.'
+    : fish
+    ? 'where $N$ is the number of fish in the lake after $t$ months and $N_0$ is the number of fish initially in the lake. Initially, there were '+format(initial)+' fish in the lake. After '+observationTime+' months, there were '+format(observed)+' fish in the lake.'
+    : store
+    ? 'where $R$ is the weekly revenue $t$ weeks after the opening of the discount store. Before the opening of the discount store, the weekly revenue of the family store was $'+format(initial)+'. After '+observationTime+' weeks, the weekly revenue was $'+format(observed)+'.'
+    : 'where $C$ is the dye concentration $t$ minutes after clear water started flowing in the tank and $C_0$ is the initial concentration of dye in the tank. The initial dye concentration was '+format(initial)+' mg/L. After '+observationTime+' minutes, the dye concentration was '+format(observed)+' mg/L.';
+  const scenarioData = byId('scenario-data');
+  scenarioData.replaceChildren();
+  for (const [index, part] of description.split(/\$([CNR](?:_0)?|t)\$/).entries()) {
+    if (index % 2 === 0) {
+      scenarioData.append(part);
+    } else {
+      const math = document.createElement('span');
+      render(math,part,part.replace('_0','₀'));
+      scenarioData.append(math);
+    }
+  }
+  byId('prediction-label').textContent = video
+    ? '(b) Predict the total number of views on '+videoDates.prediction+'. Round to the nearest whole number.'
+    : predictTime
+    ? '(b) For the concentration of dye in the tank to be '+format(target)+' mg/L, how long would clear water need to be flowing into the tank? Give your answer in minutes to two decimal places.'
+    : store
+    ? '(b) Predict the weekly revenue '+laterTime+' weeks after the opening of the discount store.'
+    : '(b) Predict the amount in '+quantity+' after '+laterTime+' '+time+'. Round to the nearest whole number.';
+  for (const id of ['rate','prediction']) {
+    byId(id).value = '';
+    byId(id+'-feedback').textContent = '';
+  }
+  byId('solution').hidden = true;
+  byId('show-solution').setAttribute('aria-expanded','false');
+}
+
+function assess(input,expected,places,hint,alternate = expected) {
+  const text = input.trim().replace(/^−/,'-');
+  if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(text)) return ['input','Enter a number.'];
+  const value = Number(Number(text).toFixed(places));
+  const lower = Number(Math.min(expected,alternate).toFixed(places));
+  const upper = Number(Math.max(expected,alternate).toFixed(places));
+  if (value >= lower && value <= upper) return ['good','Correct!'];
+  return ['bad','Not quite. '+hint];
+}
+
+function showSolution() {
+  const {scenario,initial,observed,observationTime,roundedRate,laterTime,target,roundedRatePrediction} = current;
+  const solution = byId('solution');
+  solution.replaceChildren();
+  function step(title,latex,plain) {
+    const heading = document.createElement('strong');
+    heading.className = 'final-heading';
+    heading.textContent = title;
+    const line = document.createElement('p');
+    render(line,latex,plain);
+    solution.append(heading,line);
+  }
+  step('Substitute the observed amount',observed+'='+initial+'e^{'+observationTime+'k}',
+    observed+' = '+initial+'e^('+observationTime+'k)');
+  const ratio = observed/initial;
+  const ratioText = ratio.toFixed(4);
+  const timeTerm = observationTime+'k';
+  step('Divide both sides by '+initial,
+    'e^{'+timeTerm+'}=\\frac{'+observed+'}{'+initial+'}='+ratioText,
+    'e^('+timeTerm+') = '+observed+'/'+initial+' = '+ratioText);
+  step('Take the natural logarithm of both sides',
+    timeTerm+'=\\ln('+ratioText+')',
+    timeTerm+' = ln('+ratioText+')');
+  const displayedRate = roundedRate.toFixed(4);
+  step('Divide both sides by '+observationTime+' and round to four decimal places',
+    'k=\\frac{\\ln('+ratioText+')}{'+observationTime+'}\\approx '+displayedRate,
+    'k = ln('+ratioText+')/'+observationTime+' ≈ '+displayedRate);
+  const places = scenario.predictTime ? 2 : scenario.places;
+  const rounded = roundedRatePrediction.toFixed(places);
+  const predictionHeading = {
+    fish: 'Predict the number of fish in the lake',
+    views: 'Predict the total number of video views',
+    dollars: 'Predict the family store’s weekly revenue',
+    'mg/L': 'Find how long it takes to reach the target dye concentration'
+  }[scenario.quantity];
+  if (scenario.predictTime) {
+    step(predictionHeading,
+      't=\\frac{\\ln('+target+'/'+initial+')}{k}\\approx\\frac{\\ln('+target+'/'+initial+')}{'+displayedRate+'}\\approx '+rounded+'\\text{ '+scenario.time+'}',
+      't = ln('+target+'/'+initial+')/k ≈ ln('+target+'/'+initial+')/('+displayedRate+') ≈ '+rounded+' '+scenario.time);
+  } else {
+    const symbol = scenario.quantity === 'dollars' ? 'R' : 'N';
+    step(predictionHeading,
+      symbol+'='+initial+'e^{'+laterTime+'k}\\approx '+initial+'e^{'+laterTime+'('+displayedRate+')}\\approx '+rounded+'\\text{ '+scenario.quantity+'}',
+      symbol+' = '+initial+'e^('+laterTime+'k) ≈ '+initial+'e^('+laterTime+' × '+displayedRate+') ≈ '+rounded+' '+scenario.quantity);
+  }
+  solution.hidden = false;
+  byId('show-solution').setAttribute('aria-expanded','true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  render(byId('rate-symbol'),'k','k');
+  byId('form').addEventListener('submit',event => {
+    event.preventDefault();
+    const {scenario,rate,prediction,roundedRatePrediction} = current;
+    const parts = [
+      ['rate',rate,4,'Substitute the observed amount and time, then take natural logarithms to find k.'],
+      ['prediction',prediction,scenario.predictTime ? 2 : scenario.places,
+        scenario.predictTime ? 'Use natural logarithms to solve for t.' :
+          'Substitute the given time and your value of k into the model.', roundedRatePrediction]
+    ];
+    for (const [id,expected,places,hint,alternate] of parts) {
+      let input = byId(id).value;
+      if (id === 'prediction' && scenario.quantity === 'dollars') {
+        input = input.trim().replace(/^\$/,'');
+      }
+      const [kind,message] = assess(input,expected,places,hint,alternate);
+      const feedback = byId(id+'-feedback');
+      feedback.className = 'feedback '+kind;
+      feedback.textContent = message;
+    }
+  });
+  byId('next').addEventListener('click',() => { newQuestion(); byId('rate').focus(); });
+  byId('show-solution').addEventListener('click',showSolution);
+  newQuestion();
+});
+</script>
+</body>
+</html>
